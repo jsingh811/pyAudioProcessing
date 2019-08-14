@@ -7,13 +7,16 @@ import pickle as cPickle
 import signal
 import csv
 import ntpath
+import sklearn
 import features.audioFeatureExtraction as aF
 from pyAudioAnalysis.audioTrainTest import (
     evaluateclassifier, writeTrainDataToARFF, normalizeFeatures, trainSVM,
     trainSVM_RBF, trainRandomForest, trainGradientBoosting, trainExtraTrees,
     listOfFeatures2Matrix, evaluateRegression, trainSVMregression,
     trainSVMregression_rbf, trainRandomForestRegression, load_model_knn,
-    load_model, classifierWrapper, regressionWrapper
+    load_model, regressionWrapper, randSplitFeatures,
+    listOfFeatures2Matrix, normalizeFeatures, randSplitFeatures,
+    printConfusionMatrix, trainKNN, classifierWrapper
 )
 from pyAudioAnalysis import audioBasicIO
 
@@ -28,6 +31,160 @@ shortTermWindow = 0.050
 shortTermStep = 0.050
 eps = 0.00000001
 
+def classifierWrapperHead(classifier, classifier_type, test_sample):
+    '''
+    '''
+    if classifier_type == "logisticregression":
+        R = classifier.predict(test_sample.reshape(1,-1))[0]
+        P = classifier.predict_proba(test_sample.reshape(1,-1))[0]
+        return [R, P]
+    else:
+        return classifierWrapper(classifier, classifier_type, test_sample)
+
+def trainLogisticRegression(features, Cparam):
+    '''
+    Train a multi-class probabilitistic Logistic Regression classifier.
+    Note:     This function is simply a wrapper to the sklearn functionality for logistic regression training
+    ARGUMENTS:
+        - features:         a list ([numOfClasses x 1]) whose elements containt numpy matrices of features
+                            each matrix features[i] of class i is [n_samples x numOfDimensions]
+        - Cparam:           Logistic Regression parameter C (Inverse of regularization strength)
+    RETURNS:
+        - lr:              the trained logistic regression variable
+    NOTE:
+        This function trains a Logistic Regression model for a given C value.
+        For a different kernel, other types of parameters should be provided.
+    '''
+
+    [X, Y] = listOfFeatures2Matrix(features)
+    lr = sklearn.linear_model.LogisticRegression(C=Cparam, multi_class="ovr")
+    lr.fit(X,Y)
+
+    return lr
+
+def evaluateclassifier(features, class_names, n_exp, classifier_name, Params, parameterMode, perTrain=0.90):
+    '''
+    ARGUMENTS:
+        features:     a list ([numOfClasses x 1]) whose elements containt numpy matrices of features.
+                each matrix features[i] of class i is [n_samples x numOfDimensions]
+        class_names:    list of class names (strings)
+        n_exp:        number of cross-validation experiments
+        classifier_name: svm or knn or randomforest
+        Params:        list of classifier parameters (for parameter tuning during cross-validation)
+        parameterMode:    0: choose parameters that lead to maximum overall classification ACCURACY
+                1: choose parameters that lead to maximum overall f1 MEASURE
+    RETURNS:
+         bestParam:    the value of the input parameter that optimizes the selected performance measure
+    '''
+
+    # feature normalization:
+    (features_norm, MEAN, STD) = normalizeFeatures(features)
+    #features_norm = features;
+    n_classes = len(features)
+    ac_all = []
+    f1_all = []
+    precision_classes_all = []
+    recall_classes_all = []
+    f1_classes_all = []
+    cms_all = []
+
+    # compute total number of samples:
+    n_samples_total = 0
+    for f in features:
+        n_samples_total += f.shape[0]
+    if n_samples_total > 1000 and n_exp > 50:
+        n_exp = 50
+        print("Number of training experiments changed to 50 due to high number of samples")
+    if n_samples_total > 2000 and n_exp > 10:
+        n_exp = 10
+        print("Number of training experiments changed to 10 due to high number of samples")
+
+    for Ci, C in enumerate(Params):
+        # for each param value
+        cm = numpy.zeros((n_classes, n_classes))
+        for e in range(n_exp):
+            # for each cross-validation iteration:
+            print("Param = {0:.5f} - classifier Evaluation "
+                  "Experiment {1:d} of {2:d}".format(C, e+1, n_exp))
+            # split features:
+            f_train, f_test = randSplitFeatures(features_norm, perTrain)
+            # train multi-class svms:
+            if classifier_name == "svm":
+                classifier = trainSVM(f_train, C)
+            elif classifier_name == "svm_rbf":
+                classifier = trainSVM_RBF(f_train, C)
+            elif classifier_name == "knn":
+                classifier = trainKNN(f_train, C)
+            elif classifier_name == "randomforest":
+                classifier = trainRandomForest(f_train, C)
+            elif classifier_name == "gradientboosting":
+                classifier = trainGradientBoosting(f_train, C)
+            elif classifier_name == "extratrees":
+                classifier = trainExtraTrees(f_train, C)
+            elif classifier_name == "logisticregression":
+                classifier = trainLogisticRegression(f_train, C)
+
+            cmt = numpy.zeros((n_classes, n_classes))
+            for c1 in range(n_classes):
+                n_test_samples = len(f_test[c1])
+                res = numpy.zeros((n_test_samples, 1))
+                for ss in range(n_test_samples):
+                    [res[ss], _] = classifierWrapperHead(classifier,
+                                                     classifier_name,
+                                                     f_test[c1][ss])
+                for c2 in range(n_classes):
+                    cmt[c1][c2] = float(len(numpy.nonzero(res == c2)[0]))
+            cm = cm + cmt
+        cm = cm + 0.0000000010
+        rec = numpy.zeros((cm.shape[0], ))
+        pre = numpy.zeros((cm.shape[0], ))
+
+        for ci in range(cm.shape[0]):
+            rec[ci] = cm[ci, ci] / numpy.sum(cm[ci, :])
+            pre[ci] = cm[ci, ci] / numpy.sum(cm[:, ci])
+        precision_classes_all.append(pre)
+        recall_classes_all.append(rec)
+        f1 = 2 * rec * pre / (rec + pre)
+        f1_classes_all.append(f1)
+        ac_all.append(numpy.sum(numpy.diagonal(cm)) / numpy.sum(cm))
+
+        cms_all.append(cm)
+        f1_all.append(numpy.mean(f1))
+
+    print("\t\t", end="")
+    for i, c in enumerate(class_names):
+        if i == len(class_names)-1:
+            print("{0:s}\t\t".format(c), end="")
+        else:
+            print("{0:s}\t\t\t".format(c), end="")
+    print("OVERALL")
+    print("\tC", end="")
+    for c in class_names:
+        print("\tPRE\tREC\tf1", end="")
+    print("\t{0:s}\t{1:s}".format("ACC", "f1"))
+    best_ac_ind = numpy.argmax(ac_all)
+    best_f1_ind = numpy.argmax(f1_all)
+    for i in range(len(precision_classes_all)):
+        print("\t{0:.3f}".format(Params[i]), end="")
+        for c in range(len(precision_classes_all[i])):
+            print("\t{0:.1f}\t{1:.1f}\t{2:.1f}".format(100.0 * precision_classes_all[i][c],
+                                                       100.0 * recall_classes_all[i][c],
+                                                       100.0 * f1_classes_all[i][c]), end="")
+        print("\t{0:.1f}\t{1:.1f}".format(100.0 * ac_all[i], 100.0 * f1_all[i]), end="")
+        if i == best_f1_ind:
+            print("\t best f1", end="")
+        if i == best_ac_ind:
+            print("\t best Acc", end="")
+        print("")
+
+    if parameterMode == 0:    # keep parameters that maximize overall classification accuracy:
+        print("Confusion Matrix:")
+        printConfusionMatrix(cms_all[best_ac_ind], class_names)
+        return Params[best_ac_ind]
+    elif parameterMode == 1:  # keep parameters that maximize overall f1 measure:
+        print("Confusion Matrix:")
+        printConfusionMatrix(cms_all[best_f1_ind], class_names)
+        return Params[best_f1_ind]
 
 def featureAndTrain(list_of_dirs, mt_win, mt_step, st_win, st_step,
                     classifier_type, model_name,
@@ -78,6 +235,8 @@ def featureAndTrain(list_of_dirs, mt_win, mt_step, st_win, st_step,
         classifier_par = numpy.array([10, 25, 50, 100,200,500])
     elif classifier_type == "extratrees":
         classifier_par = numpy.array([10, 25, 50, 100,200,500])
+    elif classifier_type == "logisticregression":
+        classifier_par = numpy.array([0.01, 0.1, 1, 5])
 
     # get optimal classifeir parameter:
     features2 = []
@@ -113,6 +272,9 @@ def featureAndTrain(list_of_dirs, mt_win, mt_step, st_win, st_step,
         classifier = trainGradientBoosting(featuresNew, bestParam)
     elif classifier_type == "extratrees":
         classifier = trainExtraTrees(featuresNew, bestParam)
+    elif classifier_type == "logisticregression":
+        classifier = trainLogisticRegression(featuresNew, bestParam)
+
 
     if classifier_type == "knn":
         [X, Y] = listOfFeatures2Matrix(featuresNew)
@@ -134,7 +296,8 @@ def featureAndTrain(list_of_dirs, mt_win, mt_step, st_win, st_step,
     elif classifier_type == "svm" or classifier_type == "svm_rbf" or \
                     classifier_type == "randomforest" or \
                     classifier_type == "gradientboosting" or \
-                    classifier_type == "extratrees":
+                    classifier_type == "extratrees" or \
+                    classifier_type == "logisticregression":
         with open(model_name, 'wb') as fid:
             cPickle.dump(classifier, fid)
         fo = open(model_name + "MEANS", "wb")
@@ -297,7 +460,7 @@ def fileClassification(inputFile, model_name, model_type, feats=["gfcc", "mfcc"]
         mt_features = numpy.append(mt_features, beatConf)
     curFV = (mt_features - MEAN) / STD                # normalization
 
-    [Result, P] = classifierWrapper(classifier, model_type, curFV)    # classification
+    [Result, P] = classifierWrapperHead(classifier, model_type, curFV)    # classification
     return Result, P, classNames
 
 
