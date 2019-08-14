@@ -76,7 +76,7 @@ def stFeatureExtraction(signal, fs, win, step, feats):
         feature_names += ["mfcc_{0:d}".format(mfcc_i)
                       for mfcc_i in range(1, n_mfcc_feats+1)]
     if "gfcc" in feats:
-        feature_names += ["ffcc_{0:d}".format(gfcc_i)
+        feature_names += ["gfcc_{0:d}".format(gfcc_i)
                       for gfcc_i in range(1, ngfcc+1)]
     feature_names += ["chroma_{0:d}".format(chroma_i)
                       for chroma_i in range(1, n_chroma_feats)]
