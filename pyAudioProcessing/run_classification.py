@@ -12,7 +12,8 @@ from os import listdir
 from os.path import isfile, join
 import json
 
-from trainer import audioTrainTest as aT
+from pyAudioProcessing.trainer import audioTrainTest as aT
+
 
 ### Globals and Variables
 PARSER = argparse.ArgumentParser(description="Run training or testing of audio samples.")
@@ -38,31 +39,47 @@ PARSER.add_argument(
 )
 
 
-ARGS = PARSER.parse_args()
-data_dirs = [x[0] for x in os.walk(ARGS.folder)][1:]
-print("\n There are {} classes in the specified data folder\n".format(len(data_dirs)))
+### Functions
 
-if ARGS.task == "train":
+def write_to_json(file_name, data):
+    """
+    Write data to file_name.
+    """
+    with open(file_name, 'w') as outfile:
+        json.dump(data, outfile, indent=1)
+    print("\nResults saved in {}\n".format(file_name))
+
+def train_model(data_dirs, feature_names, classifier, classifier_name):
+    """
+    Train classifier using data in data_dirs
+    by extracting features specified by feature_names
+    and saving the classifier as name specified by classifier_name.
+    """
     print("""
         \n Training using features {} with classifier {} that will be saved as {}\n
         """.format(
-            ", ".join(ARGS.feature_names), ARGS.classifier, ARGS.classifier_name)
+            ", ".join(feature_names), classifier, classifier_name)
     )
     aT.featureAndTrain(
         data_dirs,
         1.0, 1.0,
         aT.shortTermWindow, aT.shortTermStep,
-        ARGS.classifier,
-        ARGS.classifier_name,
+        classifier,
+        classifier_name,
         False,
-        feats=ARGS.feature_names
+        feats=feature_names
     )
 
-elif ARGS.task == "classify":
+def classify_data(data_dirs, feature_names, classifier, classifier_name):
+    """
+    Classify data in data_dirs
+    by extracting features specified by feature_names
+    and using the classifier saved by the name specified by classifier_name.
+    """
     print(
         """\n Classifying using features {} with classifier {} that is saved as {}\n
         """.format(
-            ", ".join(ARGS.feature_names), ARGS.classifier, ARGS.classifier_name)
+            ", ".join(feature_names), classifier, classifier_name)
         )
     results = {}
     for fol in data_dirs:
@@ -74,9 +91,9 @@ elif ARGS.task == "classify":
         for f in all_files:
             res = aT.fileClassification(
                 join(fol, f),
-                ARGS.classifier_name,
-                ARGS.classifier,
-                feats=ARGS.feature_names
+                classifier_name,
+                classifier,
+                feats=feature_names
             )
             results[fol][f] = {
                 "probabilities": list(res[1]),
@@ -90,6 +107,28 @@ elif ARGS.task == "classify":
                 correctly_classified, num_files
             )
         )
-    with open('classifier_results.json', 'w') as outfile:
-        json.dump(results, outfile, indent=1)
-    print("\nResults saved in classifier_results.json\n")
+    write_to_json('classifier_results.json', results)
+
+def train_and_classify(folder_path, task, feature_names, classifier, classifier_name):
+    """
+    Train on the data under folder_path or classify the data in folder path
+    using features specified by feature_names and the specified classifier.
+    """
+    # Get all direcotiers under folder_path
+    data_dirs = [x[0] for x in os.walk(folder_path)][1:]
+    print("\n There are {} classes in the specified data folder\n".format(len(data_dirs)))
+    if task == "train":
+        train_model(data_dirs, feature_names, classifier, classifier_name)
+    elif task == "classify":
+        classify_data(data_dirs, feature_names, classifier, classifier_name)
+
+
+if __name__ == "__main__":
+    ARGS = PARSER.parse_args()
+    train_and_classify(
+        ARGS.folder,
+        ARGS.task,
+        ARGS.feature_names,
+        ARGS.classifier,
+        ARGS.classifier_name
+    )

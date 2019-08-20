@@ -8,7 +8,7 @@ import signal
 import csv
 import ntpath
 import sklearn
-import features.audioFeatureExtraction as aF
+import pyAudioProcessing.features.audioFeatureExtraction as aF
 from pyAudioAnalysis.audioTrainTest import (
     evaluateclassifier, writeTrainDataToARFF, normalizeFeatures, trainSVM,
     trainSVM_RBF, trainRandomForest, trainGradientBoosting, trainExtraTrees,
