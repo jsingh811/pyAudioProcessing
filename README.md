@@ -27,6 +27,7 @@ Feature options :
 You can choose between `mfcc`, `gfcc` or `gfcc,mfcc` features to extract from your audio files.  
 Classifier options :  
 You can choose between `svm`, `svm_rbf`, `randomforest`, `logisticregression`, `knn`, `gradientboosting` and `extratrees`.  
+Hyperparameter tuning is included in the code for each using grid search.  
  
  
 ### Examples  
