@@ -75,7 +75,7 @@ python pyAudioProcessing/extract_features.py -f "data_samples/testing"  -feats "
 ```  
 Features extracted get saved in `audio_features.json`.  
 
-Code example of using `gfcc` feature and `svm` classifier.  
+Code example of performing `gfcc` and `mfcc` feature extraction.   
 ```
 from pyAudioProcessing.extract_features import get_features
 # Feature extraction
