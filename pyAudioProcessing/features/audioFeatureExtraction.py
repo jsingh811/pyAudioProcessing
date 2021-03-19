@@ -82,23 +82,23 @@ def stFeatureExtraction(signal, fs, win, step, feats):
                       for chroma_i in range(1, n_chroma_feats)]
     feature_names.append("chroma_std")
     st_features = []
-    while (cur_p + win - 1 < N):                        # for each short-term window until the end of signal
+    while (cur_p + win - 1 < N):# for each short-term window until the end of signal
         count_fr += 1
-        x = signal[cur_p:cur_p+win]                    # get current window
-        cur_p = cur_p + step                           # update window position
-        X = abs(fft(x))                                  # get fft magnitude
-        X = X[0:nFFT]                                    # normalize fft
+        x = signal[cur_p:cur_p+win] # get current window
+        cur_p = cur_p + step # update window position
+        X = abs(fft(x)) # get fft magnitude
+        X = X[0:nFFT] # normalize fft
         X = X / len(X)
         if count_fr == 1:
-            X_prev = X.copy()                             # keep previous fft mag (used in spectral flux)
+            X_prev = X.copy() # keep previous fft mag (used in spectral flux)
         curFV = numpy.zeros((n_total_feats, 1))
-        curFV[0] = stZCR(x)                              # zero crossing rate
-        curFV[1] = stEnergy(x)                           # short-term energy
-        curFV[2] = stEnergyEntropy(x)                    # short-term entropy of energy
+        curFV[0] = stZCR(x) # zero crossing rate
+        curFV[1] = stEnergy(x) # short-term energy
+        curFV[2] = stEnergyEntropy(x) # short-term entropy of energy
         [curFV[3], curFV[4]] = stSpectralCentroidAndSpread(X, fs)    # spectral centroid and spread
-        curFV[5] = stSpectralEntropy(X)                  # spectral entropy
-        curFV[6] = stSpectralFlux(X, X_prev)              # spectral flux
-        curFV[7] = stSpectralRollOff(X, 0.90, fs)        # spectral rolloff
+        curFV[5] = stSpectralEntropy(X) # spectral entropy
+        curFV[6] = stSpectralFlux(X, X_prev) # spectral flux
+        curFV[7] = stSpectralRollOff(X, 0.90, fs) # spectral rolloff
         if "mfcc" in feats:
             curFV[n_time_spectral_feats:n_time_spectral_feats+n_mfcc_feats, 0] = \
             stMFCC(X, fbank, n_mfcc_feats).copy()    # MFCCs
@@ -250,6 +250,7 @@ def dirsWavFeatureExtraction(dirNames, mt_win, mt_step, st_win, st_step, feats, 
     features = []
     classNames = []
     fileNames = []
+    feat_names = []
     for i, d in enumerate(dirNames):
         [f, fn, feature_names] = dirWavFeatureExtraction(d, mt_win, mt_step,
                                                          st_win, st_step,
@@ -259,8 +260,9 @@ def dirsWavFeatureExtraction(dirNames, mt_win, mt_step, st_win, st_step, feats, 
             # if at least one audio file has been found in the provided folder:
             features.append(f)
             fileNames.append(fn)
+            feat_names.append(feature_names)
             if d[-1] == os.sep:
                 classNames.append(d.split(os.sep)[-2])
             else:
                 classNames.append(d.split(os.sep)[-1])
-    return features, classNames, fileNames
+    return features, classNames, fileNames, feat_names
