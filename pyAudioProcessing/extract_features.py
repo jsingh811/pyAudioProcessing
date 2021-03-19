@@ -42,6 +42,7 @@ def get_features(folder_path, feature_names):
     ..}
     """
     data_dirs = [x[0] for x in os.walk(folder_path)][1:]
+    feature_names = [feat.lower().strip() for feat in feature_names]
     print("""
         \n Extracting features {} \n
         """.format(
