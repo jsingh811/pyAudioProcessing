@@ -2,7 +2,8 @@
 
 ![pyaudioprocessing](https://user-images.githubusercontent.com/16875926/63388515-8e66fe00-c35d-11e9-98f5-a7ad0478a353.png)
 
-A Python based library for processing audio data into features and building Machine Learning models.
+A Python based library for processing audio data into features and building Machine Learning models.  
+This was written using `Python 3.7.6`, and should work with python 3.6+.  
 
 
 ## Getting Started  
