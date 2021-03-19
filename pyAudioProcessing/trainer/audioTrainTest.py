@@ -186,6 +186,53 @@ def evaluateclassifier(features, class_names, n_exp, classifier_name, Params, pa
         printConfusionMatrix(cms_all[best_f1_ind], class_names)
         return Params[best_f1_ind]
 
+def extract_raw_features(
+    list_of_dirs, mt_win, mt_step, st_win, st_step, compute_beat, feats
+):
+    """
+    Extracts raw features specified by feats.
+    Returns features, class names, file names and feature names.
+    """
+    [features, classNames, fileNames, featureNames] = aF.dirsWavFeatureExtraction(
+        list_of_dirs,
+        mt_win,
+        mt_step,
+        st_win,
+        st_step,
+        compute_beat=compute_beat,
+        feats=feats
+    )
+    return features, classNames, fileNames, featureNames
+
+def format_features(features):
+    """
+    Formats input list of features.
+    """
+    formatted_features = []
+    for f in features:
+        fTemp = []
+        for i in range(f.shape[0]):
+            temp = f[i,:]
+            if (not numpy.isnan(temp).any()) and (not numpy.isinf(temp).any()):
+                fTemp.append(temp.tolist())
+            else:
+                print("NaN Found! Feature vector not used for training")
+        formatted_features.append(numpy.array(fTemp))
+    return formatted_features
+
+def extract_features(
+    list_of_dirs, mt_win, mt_step, st_win, st_step, compute_beat, feats
+):
+    """
+    Extracts features and returns features, class names, file names
+    and feature names.
+    """
+    features, classNames, fileNames, featureNames = extract_raw_features(
+        list_of_dirs, mt_win, mt_step, st_win, st_step, compute_beat, feats
+    )
+    features = format_features(features)
+    return features, classNames, fileNames, featureNames
+
 def featureAndTrain(list_of_dirs, mt_win, mt_step, st_win, st_step,
                     classifier_type, model_name,
                     compute_beat=False, perTrain=0.90, feats=["gfcc", "mfcc"]):
@@ -202,13 +249,13 @@ def featureAndTrain(list_of_dirs, mt_win, mt_step, st_win, st_step,
     '''
 
     # STEP A: Feature Extraction:
-    [features, classNames, _] = aF.dirsWavFeatureExtraction(list_of_dirs,
-                                                            mt_win,
-                                                            mt_step,
-                                                            st_win,
-                                                            st_step,
-                                                            compute_beat=compute_beat,
-                                                            feats=feats)
+    features, classNames, _, _ = extract_raw_features(list_of_dirs,
+                                            mt_win,
+                                            mt_step,
+                                            st_win,
+                                            st_step,
+                                            compute_beat=compute_beat,
+                                            feats=feats)
 
     if len(features) == 0:
         print("trainSVM_feature ERROR: No data found in any input folder!")
@@ -238,25 +285,17 @@ def featureAndTrain(list_of_dirs, mt_win, mt_step, st_win, st_step,
     elif classifier_type == "logisticregression":
         classifier_par = numpy.array([0.01, 0.1, 1, 5])
 
-    # get optimal classifeir parameter:
-    features2 = []
-    for f in features:
-        fTemp = []
-        for i in range(f.shape[0]):
-            temp = f[i,:]
-            if (not numpy.isnan(temp).any()) and (not numpy.isinf(temp).any()) :
-                fTemp.append(temp.tolist())
-            else:
-                print("NaN Found! Feature vector not used for training")
-        features2.append(numpy.array(fTemp))
-    features = features2
+    # get optimal classifier parameter
+    features = format_features(features)
 
-    bestParam = evaluateclassifier(features, classNames, 100, classifier_type, classifier_par, 0, perTrain)
+    bestParam = evaluateclassifier(
+        features, classNames, 100, classifier_type, classifier_par, 0, perTrain
+    )
 
     print("Selected params: {0:.5f}".format(bestParam))
 
     C = len(classNames)
-    [features_norm, MEAN, STD] = normalizeFeatures(features)        # normalize features
+    [features_norm, MEAN, STD] = normalizeFeatures(features) # normalize features
     MEAN = MEAN.tolist()
     STD = STD.tolist()
     featuresNew = features_norm
@@ -274,7 +313,6 @@ def featureAndTrain(list_of_dirs, mt_win, mt_step, st_win, st_step,
         classifier = trainExtraTrees(featuresNew, bestParam)
     elif classifier_type == "logisticregression":
         classifier = trainLogisticRegression(featuresNew, bestParam)
-
 
     if classifier_type == "knn":
         [X, Y] = listOfFeatures2Matrix(featuresNew)
