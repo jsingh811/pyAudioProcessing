@@ -10,8 +10,8 @@ import argparse
 import os
 from os import listdir
 from os.path import isfile, join
-import json
 
+from pyAudioProcessing.utils import write_to_json
 from pyAudioProcessing.trainer import audioTrainTest as aT
 
 
@@ -41,20 +41,13 @@ PARSER.add_argument(
 
 ### Functions
 
-def write_to_json(file_name, data):
-    """
-    Write data to file_name.
-    """
-    with open(file_name, 'w') as outfile:
-        json.dump(data, outfile, indent=1)
-    print("\nResults saved in {}\n".format(file_name))
-
 def train_model(data_dirs, feature_names, classifier, classifier_name):
     """
     Train classifier using data in data_dirs
     by extracting features specified by feature_names
     and saving the classifier as name specified by classifier_name.
     """
+    feature_names = [feat.lower().strip() for feat in feature_names]
     print("""
         \n Training using features {} with classifier {} that will be saved as {}\n
         """.format(
@@ -76,6 +69,7 @@ def classify_data(data_dirs, feature_names, classifier, classifier_name):
     by extracting features specified by feature_names
     and using the classifier saved by the name specified by classifier_name.
     """
+    feature_names = [feat.lower().strip() for feat in feature_names]
     print(
         """\n Classifying using features {} with classifier {} that is saved as {}\n
         """.format(
