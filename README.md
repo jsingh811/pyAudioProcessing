@@ -8,14 +8,17 @@ This was written using `Python 3.7.6`, and should work with python 3.6+.
 
 ## Getting Started  
 
-Clone the project and get it setup  
+Use pip  
+```
+pip install pyAudioProcessing
+```  
+Or, you could also clone the project and get it setup  
 
 ```
 git clone git@github.com:jsingh811/pyAudioProcessing.git
 pip install -e .
 ```
-
-Get the requirements by running
+and then, get the requirements by running
 
 ```
 pip install -r requirements/requirements.txt
@@ -34,7 +37,7 @@ Hyperparameter tuning is included in the code for each using grid search.
 
 ### Examples  
 
-Command line example of using `gfcc` feature and `svm` classifier.  
+Command line example of using `gfcc` feature and `svm` classifier.   
 
 Training:  
 ```
