@@ -1,8 +1,20 @@
+import os
 import setuptools
 
+PROJECT = os.path.abspath(os.path.dirname(__file__))
+REQUIREMENTS_PATH = "requirements/requirements.txt"
 # The text of the README file
 with open("README.md", "r") as f:
     long_description = f.read()
+
+def get_requirements(path=REQUIREMENTS_PATH):
+    """
+    Returns a list of requirements defined by REQUIREMENTS_PATH.
+    """
+    requirements = []
+    for line in read(path).splitlines():
+        requirements.append(line.strip())
+    return requirements
 
 setuptools.setup(
    name='pyAudioProcessing',
@@ -11,10 +23,10 @@ setuptools.setup(
    long_description=long_description,
    long_description_content_type="text/markdown",
    author='Jyotika Singh',
-   packages=setuptools.find_packages(),#['pyAudioProcessing'],
+   packages=setuptools.find_packages(where=PROJECT),
    url="https://github.com/jsingh811/pyAudioProcessing",
-   include_package_data=True,
-   python_requires='>=3.6',
+   install_requires=get_requirements(),
+   python_requires='>=3.6, <4',
    py_modules=["pyAudioProcessing"],
    classifiers=[
        "Programming Language :: Python :: 3",
