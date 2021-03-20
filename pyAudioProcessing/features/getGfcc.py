@@ -11,7 +11,7 @@ Created on Thu Jul 13 13:08:51 2019
 import math
 import numpy
 
-from pyAudioProcessing.features.gammatone import filters
+from pyAudioProcessing.features import filters
 
 ################################################################################
 # Classes
