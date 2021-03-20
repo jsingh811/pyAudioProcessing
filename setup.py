@@ -1,4 +1,5 @@
 import os
+import codecs
 import setuptools
 
 PROJECT = os.path.abspath(os.path.dirname(__file__))
@@ -6,6 +7,10 @@ REQUIREMENTS_PATH = "requirements/requirements.txt"
 # The text of the README file
 with open("README.md", "r") as f:
     long_description = f.read()
+
+def read(path):
+    with codecs.open(os.path.join(PROJECT, path), "rb", "utf-8") as f:
+        return f.read()
 
 def get_requirements(path=REQUIREMENTS_PATH):
     """
@@ -18,7 +23,7 @@ def get_requirements(path=REQUIREMENTS_PATH):
 
 setuptools.setup(
    name='pyAudioProcessing',
-   version='1.1.0',
+   version='1.1.3',
    description='Audio processing-feature extraction and building machine learning models from audio data.',
    long_description=long_description,
    long_description_content_type="text/markdown",
