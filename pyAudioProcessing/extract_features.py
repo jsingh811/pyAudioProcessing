@@ -55,7 +55,7 @@ def get_features(folder_path, feature_names):
         False,
         feature_names
     )
-    return {}
+    
     class_file_feats = {}
     for inx in range(len(class_names)):
         files = file_names[inx]
