@@ -8,14 +8,20 @@ This was written using `Python 3.7.6`, and should work with python 3.6+.
 
 ## Getting Started  
 
-Use pip  
+1. One way to install pyAudioProcessing and it's dependencies is from PyPI using pip
 ```
 pip install pyAudioProcessing
 ```  
-Or, you could also clone the project and get it setup  
+To upgrade to the latest version of pyAudioProcessing, the following pip command can be used.  
+```
+pip install -U pyAudioProcessing
+```  
+
+2. Or, you could also clone the project and get it setup  
 
 ```
 git clone git@github.com:jsingh811/pyAudioProcessing.git
+cd pyAudioProcessing
 pip install -e .
 ```
 and then, get the requirements by running
