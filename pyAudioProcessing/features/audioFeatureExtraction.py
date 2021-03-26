@@ -57,30 +57,36 @@ def stFeatureExtraction(signal, fs, win, step, feats):
     nFFT = int(win / 2)
 
     [fbank, freqs] = mfccInitFilterBanks(fs, nFFT)                # compute the triangular filter banks used in the mfcc calculation
-    nChroma, nFreqsPerChroma = stChromaFeaturesInit(nFFT, fs)
 
-    n_time_spectral_feats = 8
     n_harmonic_feats = 0
-    n_chroma_feats = 13
-    n_total_feats = n_time_spectral_feats + n_mfcc_feats + n_harmonic_feats + n_chroma_feats +ngfcc
-#    n_total_feats = n_time_spectral_feats + n_mfcc_feats + n_harmonic_feats
+
     feature_names = []
-    feature_names.append("zcr")
-    feature_names.append("energy")
-    feature_names.append("energy_entropy")
-    feature_names += ["spectral_centroid", "spectral_spread"]
-    feature_names.append("spectral_entropy")
-    feature_names.append("spectral_flux")
-    feature_names.append("spectral_rolloff")
+    if "spectral" in feats:
+        n_time_spectral_feats = 8
+        feature_names.append("zcr")
+        feature_names.append("energy")
+        feature_names.append("energy_entropy")
+        feature_names += ["spectral_centroid", "spectral_spread"]
+        feature_names.append("spectral_entropy")
+        feature_names.append("spectral_flux")
+        feature_names.append("spectral_rolloff")
+    else:
+        n_time_spectral_feats = 0
     if "mfcc" in feats:
         feature_names += ["mfcc_{0:d}".format(mfcc_i)
                       for mfcc_i in range(1, n_mfcc_feats+1)]
     if "gfcc" in feats:
         feature_names += ["gfcc_{0:d}".format(gfcc_i)
                       for gfcc_i in range(1, ngfcc+1)]
-    feature_names += ["chroma_{0:d}".format(chroma_i)
-                      for chroma_i in range(1, n_chroma_feats)]
-    feature_names.append("chroma_std")
+    if "chroma" in feats:
+        nChroma, nFreqsPerChroma = stChromaFeaturesInit(nFFT, fs)
+        n_chroma_feats = 13
+        feature_names += ["chroma_{0:d}".format(chroma_i)
+                          for chroma_i in range(1, n_chroma_feats)]
+        feature_names.append("chroma_std")
+    else:
+        n_chroma_feats = 0
+    n_total_feats = n_time_spectral_feats + n_mfcc_feats + n_harmonic_feats + n_chroma_feats +ngfcc
     st_features = []
     while (cur_p + win - 1 < N):# for each short-term window until the end of signal
         count_fr += 1
@@ -92,24 +98,26 @@ def stFeatureExtraction(signal, fs, win, step, feats):
         if count_fr == 1:
             X_prev = X.copy() # keep previous fft mag (used in spectral flux)
         curFV = numpy.zeros((n_total_feats, 1))
-        curFV[0] = stZCR(x) # zero crossing rate
-        curFV[1] = stEnergy(x) # short-term energy
-        curFV[2] = stEnergyEntropy(x) # short-term entropy of energy
-        [curFV[3], curFV[4]] = stSpectralCentroidAndSpread(X, fs)    # spectral centroid and spread
-        curFV[5] = stSpectralEntropy(X) # spectral entropy
-        curFV[6] = stSpectralFlux(X, X_prev) # spectral flux
-        curFV[7] = stSpectralRollOff(X, 0.90, fs) # spectral rolloff
+        if "spectral" in feats:
+            curFV[0] = stZCR(x) # zero crossing rate
+            curFV[1] = stEnergy(x) # short-term energy
+            curFV[2] = stEnergyEntropy(x) # short-term entropy of energy
+            [curFV[3], curFV[4]] = stSpectralCentroidAndSpread(X, fs)    # spectral centroid and spread
+            curFV[5] = stSpectralEntropy(X) # spectral entropy
+            curFV[6] = stSpectralFlux(X, X_prev) # spectral flux
+            curFV[7] = stSpectralRollOff(X, 0.90, fs) # spectral rolloff
         if "mfcc" in feats:
             curFV[n_time_spectral_feats:n_time_spectral_feats+n_mfcc_feats, 0] = \
             stMFCC(X, fbank, n_mfcc_feats).copy()    # MFCCs
         if "gfcc" in feats:
             curFV[n_time_spectral_feats+n_mfcc_feats:n_time_spectral_feats+n_mfcc_feats+ngfcc, 0] = gfcc.get_gfcc(x)
-        chromaNames, chromaF = stChromaFeatures(X, fs, nChroma, nFreqsPerChroma)
-        curFV[n_time_spectral_feats + n_mfcc_feats + ngfcc:
-              n_time_spectral_feats + n_mfcc_feats + n_chroma_feats + ngfcc - 1] = \
-            chromaF
-        curFV[n_time_spectral_feats + n_mfcc_feats + n_chroma_feats + ngfcc - 1] = \
-            chromaF.std()
+        if "chroma" in feats:
+            chromaNames, chromaF = stChromaFeatures(X, fs, nChroma, nFreqsPerChroma)
+            curFV[n_time_spectral_feats + n_mfcc_feats + ngfcc:
+                  n_time_spectral_feats + n_mfcc_feats + n_chroma_feats + ngfcc - 1] = \
+                chromaF
+            curFV[n_time_spectral_feats + n_mfcc_feats + n_chroma_feats + ngfcc - 1] = \
+                chromaF.std()
         st_features.append(curFV)
         X_prev = X.copy()
 

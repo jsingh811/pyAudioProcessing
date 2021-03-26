@@ -235,7 +235,7 @@ def extract_features(
 
 def featureAndTrain(list_of_dirs, mt_win, mt_step, st_win, st_step,
                     classifier_type, model_name,
-                    compute_beat=False, perTrain=0.90, feats=["gfcc", "mfcc"]):
+                    compute_beat=False, perTrain=0.90, feats=["gfcc", "mfcc", "spectral", "chroma"]):
     '''
     This function is used as a wrapper to segment-based audio feature extraction and classifier training.
     ARGUMENTS:

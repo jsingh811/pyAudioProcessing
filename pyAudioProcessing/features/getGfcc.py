@@ -41,12 +41,23 @@ class GFCCFeature(object):
         """
         return filters.make_erb_filters(self.fs, filters.centre_freqs(self.fs, 64, 50))
 
-    def get_gfcc(self, signal, ccST=1, ccEND=23):
+    def mean_var_norm(self, x, std=True):
+        """
+        Returns mean variance normalization.
+        """
+        norm = x - numpy.mean(x, axis=0)
+        if std is True:
+            norm = norm / numpy.std(norm)
+        return norm
+
+    def get_gfcc(self, signal, ccST=1, ccEND=23, norm=False):
         """
         Get GFCC feature.
         """
         erb_filterbank = filters.erb_filterbank(numpy.array(signal), self.erb_filter)
         inData = erb_filterbank[10:,:]
+        inData = numpy.absolute(inData)
+        inData = numpy.power(inData, 1/3)
         [chnNum, frmNum] = numpy.array(inData).shape
         mtx = self.dct_matrix(chnNum)
         outData = numpy.matmul(mtx, inData)
@@ -54,4 +65,6 @@ class GFCCFeature(object):
         gfcc_feat = numpy.array(
             [numpy.mean(data_list) for data_list in outData]
         ).copy()
+        if norm is True:
+            gfcc_feat = self.mean_var_norm(gfcc_feat)
         return gfcc_feat

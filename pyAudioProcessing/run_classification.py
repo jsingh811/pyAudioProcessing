@@ -27,7 +27,7 @@ PARSER.add_argument(
 )
 PARSER.add_argument(
     "-feats", "--feature-names", type=lambda s: [item for item in s.split(",")],
-    default=["mfcc", "gfcc"],
+    default=["mfcc", "gfcc", "chroma", "spectral"],
     help="Features to compute.",
 )
 PARSER.add_argument(
@@ -96,6 +96,8 @@ def classify_data(data_dirs, feature_names, classifier, classifier_name):
             indx = list(res[1]).index(max(res[1]))
             if res[2][indx] == fol.split("/")[-1]:
                 correctly_classified += 1
+        if correctly_classified == 0:
+            print("Either you passed in data with unknown classes, or")
         print(
             "{} out of {} instances were classified correctly".format(
                 correctly_classified, num_files
