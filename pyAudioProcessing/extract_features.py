@@ -23,7 +23,7 @@ PARSER.add_argument(
 )
 PARSER.add_argument(
     "-feats", "--feature-names", type=lambda s: [item for item in s.split(",")],
-    default=["mfcc", "gfcc"],
+    default=["mfcc", "gfcc", "chroma", "spectral"],
     help="Features to compute.",
 )
 
@@ -55,6 +55,7 @@ def get_features(folder_path, feature_names):
         False,
         feature_names
     )
+    return {}
     class_file_feats = {}
     for inx in range(len(class_names)):
         files = file_names[inx]

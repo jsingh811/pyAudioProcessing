@@ -27,7 +27,7 @@ PARSER.add_argument(
 )
 PARSER.add_argument(
     "-feats", "--feature-names", type=lambda s: [item for item in s.split(",")],
-    default=["mfcc", "gfcc"],
+    default=["mfcc", "gfcc", "chroma", "spectral"],
     help="Features to compute.",
 )
 PARSER.add_argument(
