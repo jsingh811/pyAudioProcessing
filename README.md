@@ -35,7 +35,7 @@ pip install -r requirements/requirements.txt
 ### Choices  
 
 Feature options :  
-You can choose between features `mfcc`, `gfcc`, `spectral`, `chroma` or a comma separated combination of those, example `gfcc,mfcc,spectral,chroma`, to extract from your audio files.  
+You can choose between features `mfcc`, `gfcc`, `spectral`, `chroma` or any combination of those, example `gfcc,mfcc,spectral,chroma`, to extract from your audio files.  
 
 Classifier options :  
 You can choose between `svm`, `svm_rbf`, `randomforest`, `logisticregression`, `knn`, `gradientboosting` and `extratrees`.  
@@ -114,8 +114,6 @@ Classifying:
 python pyAudioProcessing/run_classification.py -f "data_samples/testing" -clf "svm" -clfname "svm_clf" -t "classify" -feats "gfcc,spectral,chroma"
 ```  
 Classification results get saved in `classifier_results.json`.  
-
-
 
 
 ## Extracting features from audios  
