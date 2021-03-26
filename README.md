@@ -74,7 +74,6 @@ Similarly, for any test data (with known labels) you want to pass through the cl
 │   ├── speech_sample6.wav
 ```  
 If you want to classify audio samples without any known labels, structure the data similarly as  
-Similarly, for any test data (with known labels) you want to pass through the classifier, structure it as  
 
 ```bash
 .
