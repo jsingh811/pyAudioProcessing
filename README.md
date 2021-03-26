@@ -29,7 +29,7 @@ pip install -r requirements/requirements.txt
 ### Choices  
 
 Feature options :  
-You can choose between `mfcc`, `gfcc` or `gfcc,mfcc` features to extract from your audio files.  
+You can choose between features `mfcc`, `gfcc`, `spectral`, `chroma` or a comma separated combination of those, example `gfcc,mfcc,spectral,chroma`, to extract from your audio files.  
 Classifier options :  
 You can choose between `svm`, `svm_rbf`, `randomforest`, `logisticregression`, `knn`, `gradientboosting` and `extratrees`.  
 Hyperparameter tuning is included in the code for each using grid search.  
@@ -37,27 +37,27 @@ Hyperparameter tuning is included in the code for each using grid search.
 
 ### Examples  
 
-Command line example of using `gfcc` feature and `svm` classifier.   
+Command line example of using `gfcc,spectral,chroma` feature and `svm` classifier.   
 
 Training:  
 ```
-python pyAudioProcessing/run_classification.py -f "data_samples/training" -clf "svm" -clfname "svm_clf" -t "train" -feats "gfcc"
+python pyAudioProcessing/run_classification.py -f "data_samples/training" -clf "svm" -clfname "svm_clf" -t "train" -feats "gfcc,spectral,chroma"
 ```  
 Classifying:   
 
 ```
-python pyAudioProcessing/run_classification.py -f "data_samples/testing" -clf "svm" -clfname "svm_clf" -t "classify" -feats "gfcc"
+python pyAudioProcessing/run_classification.py -f "data_samples/testing" -clf "svm" -clfname "svm_clf" -t "classify" -feats "gfcc,spectral,chroma"
 ```  
 Classification results get saved in `classifier_results.json`.  
 
 
-Code example of using `gfcc` feature and `svm` classifier.  
+Code example of using `gfcc,spectral,chroma` feature and `svm` classifier.  
 ```
 from pyAudioProcessing.run_classification import train_and_classify
 # Training
-train_and_classify("data_samples/training", "train", ["gfcc"], "svm", "svm_clf")
+train_and_classify("data_samples/training", "train", ["gfcc", "spectral", "chroma"], "svm", "svm_clf")
 # Classify data
-train_and_classify("data_samples/testing", "classify", ["gfcc"], "svm", "svm_clf")
+train_and_classify("data_samples/testing", "classify", ["gfcc", "spectral", "chroma"], "svm", "svm_clf")
 ```
 
 ## Extracting features from audios  
@@ -67,8 +67,8 @@ This feature lets the user extract data features calculated on audio files.
 ### Choices  
 
 Feature options :  
-You can choose between `mfcc`, `gfcc` or `gfcc,mfcc` features to extract from your audio files.  
-To use your own audio files for feature extraction, refer to the format of directory `data_samples/testing`.  
+You can choose between features `mfcc`, `gfcc`, `spectral`, `chroma` or a comma separated combination of those, example `gfcc,mfcc,spectral,chroma`, to extract from your audio files.  
+To use your own audio files for feature extraction and pass in the directory containing .wav files as the `-d` argument. Please refer to the format of directory `data_samples/testing`.  
 
 ### Examples  
 
