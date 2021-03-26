@@ -28,21 +28,21 @@ and then, get the requirements by running
 
 ```
 pip install -r requirements/requirements.txt
-```
+```  
 
-## Training and Classifying Audio files  
+## Choices  
 
-### Choices  
+### Feature options  
 
-Feature options :  
-You can choose between features `mfcc`, `gfcc`, `spectral`, `chroma` or any combination of those, example `gfcc,mfcc,spectral,chroma`, to extract from your audio files.  
+You can choose between features `mfcc`, `gfcc`, `spectral`, `chroma` or any combination of those, example `gfcc,mfcc,spectral,chroma`, to extract from your audio files for classification or just saving extracted feature for other uses.  
 
-Classifier options :  
+### Classifier options   
+
 You can choose between `svm`, `svm_rbf`, `randomforest`, `logisticregression`, `knn`, `gradientboosting` and `extratrees`.  
-
 Hyperparameter tuning is included in the code for each using grid search.  
 
-### Training and Testing Data structuring  
+
+## Training and Testing Data structuring  
 
 Let's say you have 2 classes that you have training data for (music and speech), and you want to use pyAudioProcessing to train a model using available feature options. Save each class as a directory and all the training audio .wav files under the respective class directories. Example:  
 
@@ -83,9 +83,13 @@ If you want to classify audio samples without any known labels, structure the da
 │   ├── sample2.wav
 ```  
 
+## Training and Classifying Audio files  
+
+Audio data can be trained, tested and classified using pyAudioProcessing. Please see [feature options](https://github.com/jsingh811/pyAudioProcessing#feature-options) and [classifier model options](https://github.com/jsingh811/pyAudioProcessing#classifier-options) for more information.   
+
 ### Examples  
 
-Code example of using `gfcc,spectral,chroma` feature and `svm` classifier. Sample data can be found [here](https://github.com/jsingh811/pyAudioProcessing/tree/master/data_samples).   
+Code example of using `gfcc,spectral,chroma` feature and `svm` classifier. Sample data can be found [here](https://github.com/jsingh811/pyAudioProcessing/tree/master/data_samples). Please refer to the section on [Training and Testing Data structuring](https://github.com/jsingh811/pyAudioProcessing#training-and-testing-data-structuring) to use your own data instead.   
 ```
 from pyAudioProcessing.run_classification import train_and_classify
 # Training
@@ -101,7 +105,7 @@ train_and_classify("data_samples/testing", "classify", ["gfcc", "spectral", "chr
 The above logs the filename where the classification results are saved along with the details about testing files and the classifier used.
 
 
-If you cloned the project via git, the following command line example of doing training and classification with `gfcc,spectral,chroma` features and `svm` classifier can be used as well. Sample data can be found [here](https://github.com/jsingh811/pyAudioProcessing/tree/master/data_samples).  
+If you cloned the project via git, the following command line example of training and classification with `gfcc,spectral,chroma` features and `svm` classifier can be used as well. Sample data can be found [here](https://github.com/jsingh811/pyAudioProcessing/tree/master/data_samples). Please refer to the section on [Training and Testing Data structuring](https://github.com/jsingh811/pyAudioProcessing#training-and-testing-data-structuring) to use your own data instead.   
 
 Training:  
 ```
@@ -117,16 +121,11 @@ Classification results get saved in `classifier_results.json`.
 
 ## Extracting features from audios  
 
-This feature lets the user extract aggregated data features calculated per audio file.   
-
-### Choices  
-
-Feature options :  
-You can choose between features `mfcc`, `gfcc`, `spectral`, `chroma` or any combination of those to extract from your audio files.  
+This feature lets the user extract aggregated data features calculated per audio file. See [feature options](https://github.com/jsingh811/pyAudioProcessing#feature-options) for more information on choices of features available.  
 
 ### Examples  
 
-Code example for performing `gfcc` and `mfcc` feature extraction can be found below. To use your own audio data for feature extraction, pass the path to `get_features` in place of `data_samples/testing`. Please refer to the format of directory `data_samples/testing`.  
+Code example for performing `gfcc` and `mfcc` feature extraction can be found below. To use your own audio data for feature extraction, pass the path to `get_features` in place of `data_samples/testing`. Please refer to the format of directory `data_samples/testing` or the section on [Training and Testing Data structuring](https://github.com/jsingh811/pyAudioProcessing#training-and-testing-data-structuring).  
 
 ```
 from pyAudioProcessing.extract_features import get_features
@@ -148,7 +147,7 @@ utils.write_to_json("audio_features.json",features)
 ```  
 
 If you cloned the project via git, the following command line example of for `gfcc` and `mfcc` feature extractions can be used as well. The features argument should be a comma separated string, example `gfcc,mfcc`.  
-To use your own audio files for feature extraction and pass in the directory containing .wav files as the `-d` argument. Please refer to the format of directory `data_samples/testing`.   
+To use your own audio files for feature extraction, pass in the directory path containing .wav files as the `-f` argument. Please refer to the format of directory `data_samples/testing` or the section on [Training and Testing Data structuring](https://github.com/jsingh811/pyAudioProcessing#training-and-testing-data-structuring).  
 
 ```
 python pyAudioProcessing/extract_features.py -f "data_samples/testing"  -feats "gfcc,mfcc"
