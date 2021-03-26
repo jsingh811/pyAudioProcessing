@@ -59,7 +59,7 @@ def stFeatureExtraction(signal, fs, win, step, feats):
     [fbank, freqs] = mfccInitFilterBanks(fs, nFFT)                # compute the triangular filter banks used in the mfcc calculation
 
     n_harmonic_feats = 0
-    
+
     feature_names = []
     if "spectral" in feats:
         n_time_spectral_feats = 8
@@ -243,7 +243,7 @@ def dirWavFeatureExtraction(dirName, mt_win, mt_step, st_win, st_step, feats,
 
 def dirsWavFeatureExtraction(dirNames, mt_win, mt_step, st_win, st_step, feats, compute_beat=False):
     '''
-    Same as WavFeatureExtraction, but instead of a single dir it
+    Same as dirWavFeatureExtraction, but instead of a single dir it
     takes a list of paths as input and returns a list of feature matrices.
     EXAMPLE:
     [features, classNames] =
