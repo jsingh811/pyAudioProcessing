@@ -10,7 +10,7 @@ import ntpath
 import sklearn
 import pyAudioProcessing.features.audioFeatureExtraction as aF
 from pyAudioAnalysis.audioTrainTest import (
-    evaluateclassifier, writeTrainDataToARFF, normalizeFeatures, trainSVM,
+    writeTrainDataToARFF, normalizeFeatures, trainSVM,
     trainSVM_RBF, trainRandomForest, trainGradientBoosting, trainExtraTrees,
     listOfFeatures2Matrix, evaluateRegression, trainSVMregression,
     trainSVMregression_rbf, trainRandomForestRegression, load_model_knn,
