@@ -109,20 +109,16 @@ def evaluateclassifier(features, class_names, n_exp, classifier_name, Params, pa
             # split features:
             f_train, f_test = randSplitFeatures(features_norm, perTrain)
             # train multi-class svms:
-            if classifier_name == "svm":
-                classifier = trainSVM(f_train, C)
-            elif classifier_name == "svm_rbf":
-                classifier = trainSVM_RBF(f_train, C)
-            elif classifier_name == "knn":
-                classifier = trainKNN(f_train, C)
-            elif classifier_name == "randomforest":
-                classifier = trainRandomForest(f_train, C)
-            elif classifier_name == "gradientboosting":
-                classifier = trainGradientBoosting(f_train, C)
-            elif classifier_name == "extratrees":
-                classifier = trainExtraTrees(f_train, C)
-            elif classifier_name == "logisticregression":
-                classifier = trainLogisticRegression(f_train, C)
+            func = {
+                "svm": trainSVM,
+                "svm_rbf": trainSVM_RBF,
+                "knn": trainKNN,
+                "randomforest": trainRandomForest,
+                "gradientboosting": trainGradientBoosting,
+                "extratrees": trainExtraTrees,
+                "logisticregression": trainLogisticRegression,
+            }[classifier_name]
+            classifier = func(f_train, C)
 
             cmt = numpy.zeros((n_classes, n_classes))
             for c1 in range(n_classes):
