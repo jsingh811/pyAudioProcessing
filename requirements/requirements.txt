@@ -5,5 +5,4 @@ scikit-learn==0.21.2
 simplejson==3.16.0
 eyed3==0.9.5
 pydub==0.23.1
-python-magic-bin==0.4.14
 pyAudioAnalysis==0.2.5
