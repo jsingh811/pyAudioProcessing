@@ -12,7 +12,8 @@ from pyAudioAnalysis import audioBasicIO
 from pyAudioAnalysis.audioFeatureExtraction import (
     mfccInitFilterBanks, stChromaFeaturesInit, stChromaFeatures,
     stZCR, stEnergy, stEnergyEntropy, stSpectralCentroidAndSpread,
-    stSpectralEntropy, stSpectralFlux, stSpectralRollOff, stMFCC)
+    stSpectralEntropy, stSpectralFlux, stSpectralRollOff, stMFCC,
+    beatExtraction)
 from pyAudioProcessing.features import getGfcc
 
 

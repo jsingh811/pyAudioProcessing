@@ -134,8 +134,8 @@ features = get_features("data_samples/testing", ["gfcc", "mfcc"])
 # features is a dictionary that will hold data of the following format
 """
 {
-  subdir1_name: {file1_path: {"features": <list>, "feature_names": list}, ...},
-  subdir2_name: {file1_path: {"features": <list>, "feature_names": list}, ...},
+  subdir1_name: {file1_path: {"features": <list>, "feature_names": <list>}, ...},
+  subdir2_name: {file1_path: {"features": <list>, "feature_names": <list>}, ...},
   ...
 }
 """
