@@ -24,7 +24,7 @@ git clone git@github.com:jsingh811/pyAudioProcessing.git
 cd pyAudioProcessing
 pip install -e .
 ```
-and then, get the requirements by running
+and get the requirements by running
 
 ```
 pip install -r requirements/requirements.txt
