@@ -6,3 +6,4 @@ simplejson==3.16.0
 eyed3==0.9.5
 pydub==0.23.1
 pyAudioAnalysis==0.2.5
+pytest>=5.4.2
