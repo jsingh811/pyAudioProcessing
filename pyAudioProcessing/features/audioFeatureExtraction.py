@@ -202,7 +202,7 @@ def dirWavFeatureExtraction(dirName, mt_win, mt_step, st_win, st_step, feats,
         if isinstance(x, int):
             continue
 
-        t1 = time.clock()
+        t1 = time.time()
         x = audioBasicIO.stereo2mono(x)
         if x.shape[0]<float(fs)/5:
             print("  (AUDIO FILE TOO SMALL - SKIPPING)")
@@ -233,7 +233,7 @@ def dirWavFeatureExtraction(dirName, mt_win, mt_step, st_win, st_step, feats,
                 all_mt_feats = mt_term_feats
             else:
                 all_mt_feats = numpy.vstack((all_mt_feats, mt_term_feats))
-            t2 = time.clock()
+            t2 = time.time()
             duration = float(len(x)) / fs
             process_times.append((t2 - t1) / duration)
     if len(process_times) > 0:
