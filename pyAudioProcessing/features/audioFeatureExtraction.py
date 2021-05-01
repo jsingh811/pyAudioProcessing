@@ -252,7 +252,7 @@ def dirsWavFeatureExtraction(dirNames, mt_win, mt_step, st_win, st_step, feats, 
                                        'audioData/classSegmentsRec/brush-teeth','audioData/classSegmentsRec/shower'], 1, 1, 0.02, 0.02);
 
     It can be used during the training process of a classification model ,
-    in order to get feature matrices from various audio classes (each stored in a seperate path)
+    in order to get feature matrices from various audio classes (each stored in a separate path)
     '''
 
     # feature extraction for each class:

@@ -46,7 +46,7 @@ def trainLogisticRegression(features, Cparam):
     Train a multi-class probabilitistic Logistic Regression classifier.
     Note:     This function is simply a wrapper to the sklearn functionality for logistic regression training
     ARGUMENTS:
-        - features:         a list ([numOfClasses x 1]) whose elements containt numpy matrices of features
+        - features:         a list ([numOfClasses x 1]) whose elements contain numpy matrices of features
                             each matrix features[i] of class i is [n_samples x numOfDimensions]
         - Cparam:           Logistic Regression parameter C (Inverse of regularization strength)
     RETURNS:
@@ -65,7 +65,7 @@ def trainLogisticRegression(features, Cparam):
 def evaluateclassifier(features, class_names, n_exp, classifier_name, Params, parameterMode, perTrain=0.90):
     '''
     ARGUMENTS:
-        features:     a list ([numOfClasses x 1]) whose elements containt numpy matrices of features.
+        features:     a list ([numOfClasses x 1]) whose elements contain numpy matrices of features.
                 each matrix features[i] of class i is [n_samples x numOfDimensions]
         class_names:    list of class names (strings)
         n_exp:        number of cross-validation experiments
@@ -239,7 +239,7 @@ def featureAndTrain(list_of_dirs, mt_win, mt_step, st_win, st_step,
     '''
     This function is used as a wrapper to segment-based audio feature extraction and classifier training.
     ARGUMENTS:
-        list_of_dirs:        list of paths of directories. Each directory contains a signle audio class whose samples are stored in seperate WAV files.
+        list_of_dirs:        list of paths of directories. Each directory contains a signle audio class whose samples are stored in separate WAV files.
         mt_win, mt_step:        mid-term window length and step
         st_win, st_step:        short-term window and step
         classifier_type:        "svm" or "knn" or "randomforest" or "gradientboosting" or "extratrees"
