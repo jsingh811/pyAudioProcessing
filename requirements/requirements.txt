@@ -1,4 +1,4 @@
-numpy==1.19.5
+numpy==1.20.0
 matplotlib==3.1.2
 scipy==1.5.4
 scikit-learn==0.24.2
@@ -7,15 +7,3 @@ eyed3==0.9.5
 pydub==0.23.1
 pyAudioAnalysis==0.2.5
 pytest==6.2.3
-rsa==4.7
-bleach==3.3.0
-docutils==0.17.1
-Pygments==2.8.1
-jmespath==0.9.5
-urllib3==1.26.4
-colorama==0.4.3
-PyYAML==5.4.1
-requests==2.25.1
-tqdm==4.60.0
-pkginfo==1.7.0
-keyring==23.0.1
