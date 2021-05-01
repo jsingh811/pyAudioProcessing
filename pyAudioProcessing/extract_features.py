@@ -71,7 +71,7 @@ def get_features(folder_path, feature_names):
 
 if __name__ == "__main__":
     ARGS = PARSER.parse_args()
-    # dict with stucture
+    # dict with structure
     # {
     #    <folder name inside ARGS.folder>: {
     #       <file name> :{
