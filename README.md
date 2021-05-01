@@ -3,7 +3,7 @@
 ![pyaudioprocessing](https://user-images.githubusercontent.com/16875926/63388515-8e66fe00-c35d-11e9-98f5-a7ad0478a353.png)
 
 A Python based library for processing audio data into features and building Machine Learning models.  
-This was written using `Python 3.7.6`, and should work with python 3.6+.  
+This was written using `Python 3.7.6`, and has been tested to work with Python >= 3.6, <4.  
 
 
 ## Getting Started  
@@ -24,11 +24,16 @@ git clone git@github.com:jsingh811/pyAudioProcessing.git
 cd pyAudioProcessing
 pip install -e .
 ```
-and get the requirements by running
+You can also get the requirements by running
 
 ```
 pip install -r requirements/requirements.txt
 ```  
+
+If you are on Python 3.9 and experience any issues with the code samples regarding numpy, please run  
+```
+pip install -U numpy
+```
 
 ## Choices  
 
