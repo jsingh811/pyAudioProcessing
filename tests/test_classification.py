@@ -1,6 +1,9 @@
 import pytest
-from pyAudioProcessing.extract_features import get_features
-from pyAudioProcessing.run_classification import train_and_classify
+import sys
+
+sys.path.append("..")
+from pyAudioProcessing import extract_features
+from pyAudioProcessing import run_classification
 
 def test_classifications():
     """
