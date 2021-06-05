@@ -13,6 +13,10 @@ tags:
 authors:
   - name: Jyotika Singh
     orcid: 0000-0002-5442-3004
+    affiliation: 1
+affiliations:
+ - name: Independent researcher
+   index: 1
 date: 2 June 2021
 bibliography: paper.bib
 
