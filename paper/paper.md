@@ -74,30 +74,33 @@ This software offer pre-trained models. This is an evolving feature as new datas
 
 1. Audio type classifier to determine speech versus music: Trained SVM classifier for classifying audio into two possible classes - music, speech. This classifier was trained using MFCC, spectral and chroma features. Cross-validation confusion matrix has scores such as follows.
 
- | music | speech 
-music | 48.80 | 1.20
-speech | 0.60 | 49.40
+| | music | speech |
+| --- | --- | --- |
+| music | 48.80 | 1.20 |
+| speech | 0.60 | 49.40 |
 
 2. Audio type classifier to determine speech versus music versus bird sounds: Trained SVM classifier that classifying audio into three possible classes - music, speech and birds. This classifier was trained using MFCC, spectral and chroma features.
 
- | music | speech | birds
-music | 31.53 | 0.73 | 1.07
-speech | 1.00 |	32.33 | 0.00
-birds | 0.00 | 0.00 | 33.33
+| | music | speech | birds |
+| --- | --- | --- | --- |
+| music | 31.53 | 0.73 | 1.07 |
+| speech | 1.00 |	32.33 | 0.00 |
+| birds | 0.00 | 0.00 | 33.33 |
 
 3. Music genre classifier using the GTZAN [@tzanetakis_essl_cook_2001] dataset: Trained on SVM classifier using GFCC, MFCC, spectral and chroma features to classify music into 10 genre classes - blues, classical, country, disco, hiphop, jazz, metal, pop, reggae, rock.
 
- | pop | met | dis | blu | reg | cla | rock | hip | cou | jazz
-pop | 7.25 | 0.00 | 0.74 | 0.38 | 0.09 | 0.09 | 0.33 | 0.60 | 0.50 | 0.04
-met | 0.03 | 8.74 | 0.66 | 0.09 | 0.00 | 0.00 | 0.45 | 0.00 | 0.04 | 0.00
-dis | 0.69 | 0.08 | 6.29 | 0.00 | 0.74 | 0.11 | 0.90 | 0.51 | 0.69 | 0.00
-blu | 0.00 | 0.20 | 0.00 | 8.31 | 0.25 | 0.08 | 0.44 | 0.09 | 0.30 | 0.34
-reg | 0.11 | 0.00 | 0.26 | 0.58 | 7.99 | 0.00 | 0.28 | 0.59 | 0.09 | 0.11
-cla | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 9.07 | 0.23 | 0.00 | 0.23 | 0.48
-rock | 0.14 | 0.90 | 1.10 | 0.80 | 0.35 | 0.29 | 5.31 | 0.01 | 1.09 | 0.01
-hip | 0.71 | 0.14 | 0.56 | 0.18 | 1.96 | 0.00 | 0.19 | 6.10 | 0.03 | 0.14
-cou | 0.25 | 0.15 | 0.84 | 0.64 | 0.08 | 0.10 | 1.87 | 0.00 | 5.84 | 0.24
-jazz | 0.04 | 0.01 | 0.13 | 0.41 | 0.00 | 0.76 | 0.31 | 0.00 | 0.53 | 7.81
+| | pop | met | dis | blu | reg | cla | rock | hip | cou | jazz |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | 
+| pop | 7.25 | 0.00 | 0.74 | 0.38 | 0.09 | 0.09 | 0.33 | 0.60 | 0.50 | 0.04 |
+| met | 0.03 | 8.74 | 0.66 | 0.09 | 0.00 | 0.00 | 0.45 | 0.00 | 0.04 | 0.00 |
+| dis | 0.69 | 0.08 | 6.29 | 0.00 | 0.74 | 0.11 | 0.90 | 0.51 | 0.69 | 0.00 |
+| blu | 0.00 | 0.20 | 0.00 | 8.31 | 0.25 | 0.08 | 0.44 | 0.09 | 0.30 | 0.34 |
+| reg | 0.11 | 0.00 | 0.26 | 0.58 | 7.99 | 0.00 | 0.28 | 0.59 | 0.09 | 0.11 |
+| cla | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 9.07 | 0.23 | 0.00 | 0.23 | 0.48 |
+| rock | 0.14 | 0.90 | 1.10 | 0.80 | 0.35 | 0.29 | 5.31 | 0.01 | 1.09 | 0.01 |
+| hip | 0.71 | 0.14 | 0.56 | 0.18 | 1.96 | 0.00 | 0.19 | 6.10 | 0.03 | 0.14 |
+| cou | 0.25 | 0.15 | 0.84 | 0.64 | 0.08 | 0.10 | 1.87 | 0.00 | 5.84 | 0.24 |
+| jazz | 0.04 | 0.01 | 0.13 | 0.41 | 0.00 | 0.76 | 0.31 | 0.00 | 0.53 | 7.81 |
 
 These baseline models aim to present capability of audio feature generation algorithms in extracting meaningful numeric patterns from the audio data. One can train their own classifiers using similar features and different machine learning backend for researching and exploring improvements.
 
