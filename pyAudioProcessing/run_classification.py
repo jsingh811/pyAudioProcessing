@@ -132,7 +132,7 @@ def train_and_classify(
     Train on the data under folder_path or classify the data in folder path
     using features specified by feature_names and the specified classifier.
     """
-    # Get all direcotiers under folder_path
+    # Get all directories under folder_path
     data_dirs = [x[0] for x in os.walk(folder_path)][1:]
     print(
         "\n There are {} classes in the specified data folder\n".format(
