@@ -51,6 +51,8 @@ This software aims to provide machine learning engineers, data scientists, resea
 
 The motivation behind this software is understanding the popularity of Python for Machine Learning and presenting solutions for computing complex audio features using Python. This not only implies the need for resource to guide solutions for audio processing, but also signifies the need for Python guides and implementations to solve audio and speech classification tasks. The classifier implementation examples that are a part of this software and the README aim to give the users a sample solution to audio classification problems and help build the foundation to tackle new and unseen problems. 
 
+Different data processing techniques work well for different types of data. For example, word vector formations work great for text data [@nlp]. However, passing numbers data, an audio signal or an image through word vector formation is not likely to bring back any meaningful numerical representation that can be used to train machine learning models. Different data types correlate with feature formation techniques specific to their domain rather than a "one size fits all".
+
 PyAudioProcessing is a Python based library for processing audio data into features and building Machine Learning models. Audio processing and feature extraction research is popular in MATLAB. There are comparatively fewer resources for audio processing and classification in Python. This tool contains implementation of popular and different audio feature extraction that can be use in combination with most scikit-learn classifiers. Audio data can be trained, tested and classified using pyAudioProcessing. The output consists of cross validation scores and results of testing on custom audio files.
 
 The library lets the user extract aggregated data features calculated per audio file. Unique feature extractions such as Mel Frequency Cepstral Coefficients (MFCC) [@6921394], Gammatone Frequency Cepstral Coefficients (GFCC) [@inbook], spectral coefficients, chroma features and others are available to extract and use in combination with different backend classifiers. While MFCC features find use in most commonly encountered audio processing tasks such as audio type classification, speech classification, GFCC features have been found to have application in speaker identification or speaker diarization. Many such applications, comparisons and uses can be found in this IEEE paper [@6639061]. All these features are also helpful for a variety of other audio classification tasks.
@@ -72,14 +74,14 @@ Given the use of this software in the community today inspires the need and grow
 
 This software offer pre-trained models. This is an evolving feature as new datasets and classification problems gain prominence in research. Some of the pre-trained models include the following.
 
-1. Audio type classifier to determine speech versus music: Trained SVM classifier for classifying audio into two possible classes - music, speech. This classifier was trained using MFCC, spectral and chroma features. Cross-validation confusion matrix has scores such as follows.
+1. Audio type classifier to determine speech versus music: Trained SVM classifier for classifying audio into two possible classes - music, speech. This classifier was trained using MFCC, spectral and chroma features. Confusion matrix has scores such as follows.
 
 | | music | speech |
 | --- | --- | --- |
 | music | 48.80 | 1.20 |
 | speech | 0.60 | 49.40 |
 
-2. Audio type classifier to determine speech versus music versus bird sounds: Trained SVM classifier that classifying audio into three possible classes - music, speech and birds. This classifier was trained using MFCC, spectral and chroma features.
+2. Audio type classifier to determine speech versus music versus bird sounds: Trained SVM classifier that classifying audio into three possible classes - music, speech and birds. This classifier was trained using MFCC, spectral and chroma features. Confusion matrix has scores such as follows.
 
 | | music | speech | birds |
 | --- | --- | --- | --- |
@@ -87,7 +89,7 @@ This software offer pre-trained models. This is an evolving feature as new datas
 | speech | 1.00 |	32.33 | 0.00 |
 | birds | 0.00 | 0.00 | 33.33 |
 
-3. Music genre classifier using the GTZAN [@tzanetakis_essl_cook_2001] dataset: Trained on SVM classifier using GFCC, MFCC, spectral and chroma features to classify music into 10 genre classes - blues, classical, country, disco, hiphop, jazz, metal, pop, reggae, rock.
+3. Music genre classifier using the GTZAN [@tzanetakis_essl_cook_2001] dataset: Trained on SVM classifier using GFCC, MFCC, spectral and chroma features to classify music into 10 genre classes - blues, classical, country, disco, hiphop, jazz, metal, pop, reggae, rock. Confusion matrix has scores such as follows.
 
 | | pop | met | dis | blu | reg | cla | rock | hip | cou | jazz |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | 
