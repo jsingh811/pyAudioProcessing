@@ -185,6 +185,25 @@ python pyAudioProcessing/extract_features.py -f "data_samples/testing"  -feats "
 ```  
 Features extracted get saved in `audio_features.json`.  
 
+## Audio format conversion
+
+You can convert you audio in `.mp4`, `.mp3`, `.m4a` and `.aac` to `.wav`. This will allow you to use audio feature generation and classification functionalities.
+
+In order to convert your audios, the following code sample can be used.  
+
+```
+from pyAudioProcessing.convert_audio import convert_files_to_wav
+
+# dir_path is the path to the directory/folder on your machine containing audio files
+dir_path = "data/mp4_files"
+
+# simple change audio_format to "mp3", "m4a" or "acc" depending on the format
+# of audio that you are trying to convert to wav
+convert_files_to_wav(dir_path, audio_format="mp4")
+
+# the converted wav files will be saved in the same dir_path location.
+
+```
 
 ## Author  
 
