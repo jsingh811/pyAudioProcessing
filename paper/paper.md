@@ -24,9 +24,28 @@ bibliography: paper.bib
 
 # Summary
 
-PyAudioProcessing is a Python based library for processing audio data, constructing and extracting numerical features from audio, building and testing machine learning models and classifying data with existing pre-trained audio classification models or custom user-built models. It in an end-to-end solution for building features from raw audio samples and training a model that can then be used to classify unseen raw audio samples. This library allows the user to extract features such as MFCC, GFCC, spectral features, chroma features and other beat based and cepstrum based features from audio to use with one's own classification backend or popular scikit-learn classifiers that have been built into pyAudioProcessing. This software contributes to the available open-source software by enabling users to use Python based machine learning backend with highly researched audio features such as GFCC and others that are actively user for many audio classification based applications but are not readily available in Python due to primary popularity of research in MATLAB.  
+PyAudioProcessing is a Python based library for processing audio data, constructing and extracting numerical features from audio, building and testing machine learning models and classifying data with existing pre-trained audio classification models or custom user-built models. PyAudioProcessing provides five core functionalities comprising different stages of audio signal processing.  
 
-This software aims to provide machine learning engineers, data scientists, researchers and students with a set of baseline models to classify audio, the ability to use this library to build features on custom training data, the ability to automatically train on a scikit-learn classifier and perform hyperparameter tuning using this library, the ability to export the built features for integration with any machine learning backend and the ability to classify audio files. This software furthers aims to aid users in addressing research efforts using GFCC and other evolving and actively researched audio features possible with Python.
+1. Converting audio files to ".wav" format to give the users the ability to work with different types of audio files and convert them to ".wav" to increase compatibility with code and processes and work with ".wav" audio type.
+
+2. Builds numerical features from audio that can be used to train machine learning models. The set of features supported evolve with time as research informs new and improved algorithms.
+
+3. Includes the ability to export the features built with this library to use with any custom machine learning backend of the user's choosing.
+
+4. Includes the capability that allows users to train scikit-learn classifiers using features of their choosing directly from raw data. This library runs 
+
+	a. automatic hyper-parameter tuning
+	b. returns to the user the training model metrics along with cross-validation confusion matrix for model evaluation
+	c. allows the users to test the created classifier with the same features used for training
+
+5. Includes pre-trained models to provide users with baseline audio classifiers.
+
+It in an end-to-end solution for converting between audio file formats, building features from raw audio samples and training a machine learning model that can then be used to classify unseen raw audio samples. This library allows the user to extract features such as MFCC, GFCC, spectral features, chroma features and other beat based and cepstrum based features from audio to use with one's own classification backend or popular scikit-learn classifiers that have been built into pyAudioProcessing. 
+
+MATLAB is the language of choice for a vast amount of research in the audio and speech processing domain. On the contrary, Python remains the language of choice for a vast majority of Machine Learning research and functionality. This library contains features converted to Python that were originally built in MATLAB following a research invention. This software contributes to the available open-source software by enabling users to use Python based machine learning backend with highly researched audio features such as GFCC and others that are actively user for many audio classification based applications but are not readily available in Python due to primary popularity of research in MATLAB.  
+
+This software aims to provide machine learning engineers, data scientists, researchers and students with a set of baseline models to classify audio, the ability to use this library to build features on custom training data, the ability to automatically train on a scikit-learn classifier and perform hyper-parameter tuning using this library, the ability to export the built features for integration with any machine learning backend and the ability to classify audio files. This software furthers aims to aid users in addressing research efforts using GFCC and other evolving and actively researched audio features possible with Python.
+
 
 # Statement of need
 
