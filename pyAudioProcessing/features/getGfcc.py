@@ -38,8 +38,8 @@ class GFCCFeature(object):
     ):
         self.fs = fs
         self.erb_filter = self.erb_filter()
-        self.cc_start = cc_start
-        self.cc_end = cc_end
+        self.ccST = cc_start
+        self.ccEND = cc_end
 
     def dct_matrix(self, n):
         """
@@ -56,12 +56,12 @@ class GFCCFeature(object):
         """
         For the input sampling frequency, get the ERB filters.
         """
-        filters = filters.make_erb_filters(
+        erb_filter_result = filters.make_erb_filters(
             self.fs,
             filters.centre_freqs(self.fs, 64, 50)
         )
         
-        return filters
+        return erb_filter_result
 
     def mean_var_norm(self, x, std=True):
         """
@@ -77,15 +77,14 @@ class GFCCFeature(object):
     def get_gfcc(
         self,
         signal,
-        ccST=self.cc_start,
-        ccEND=self.cc_end,
         norm=False
     ):
         """
         Get GFCC feature.
         """
         erb_filterbank = filters.erb_filterbank(
-            numpy.array(signal), self.erb_filter
+            numpy.array(signal),
+            self.erb_filter
         )
         inData = erb_filterbank[10:,:]
         inData = numpy.absolute(inData)
@@ -93,10 +92,12 @@ class GFCCFeature(object):
         [chnNum, frmNum] = numpy.array(inData).shape
         mtx = self.dct_matrix(chnNum)
         outData = numpy.matmul(mtx, inData)
-        outData = outData[ccST:ccEND, :]
+        outData = outData[self.ccST:self.ccEND, :]
         gfcc_feat = numpy.array(
             [numpy.mean(data_list) for data_list in outData]
         ).copy()
+        
         if norm is True:
             gfcc_feat = self.mean_var_norm(gfcc_feat)
+        
         return gfcc_feat
