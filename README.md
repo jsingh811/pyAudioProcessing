@@ -2,7 +2,7 @@
 
 ![pyaudioprocessing](https://user-images.githubusercontent.com/16875926/63388515-8e66fe00-c35d-11e9-98f5-a7ad0478a353.png)
 
-A Python based library for processing audio data into features and building Machine Learning models.  
+A Python based library for processing audio data into features (GFCC, MFCC, spectral, chroma) and building Machine Learning models.  
 This was written using `Python 3.7.6`, and has been tested to work with Python >= 3.6, <4.  
 
 
@@ -35,7 +35,7 @@ If you are on Python 3.9 and experience any issues with the code samples regardi
 pip install -U numpy
 ```
 
-## Choices  
+## Options 
 
 ### Feature options  
 
@@ -87,6 +87,32 @@ If you want to classify audio samples without any known labels, structure the da
 │   ├── sample1.wav
 │   ├── sample2.wav
 ```  
+
+## Classifying with Pre-trained Models
+
+There are three models that have been pre-trained and provided in this project under the /models directory. They are as follows.
+
+`music genre`: Contains SVM classifier to classify audio into 10 music genres - blues, classical, country, disco, hiphop, jazz, metal, pop, reggae, rock. This classifier was trained using mfcc, gfcc, spectral and chroma features. In order to classify your audio files using this classifier, please follow the audio files structuring guidelines. The following commands in Python can be used to classify your data.
+
+`musicVSspeech`: Contains SVM classifier that classifying audio into two possible classes - music and speech. This classifier was trained using mfcc, spectral and chroma features.
+
+`musicVSspeechVSbirds`: Contains SVM classifier that classifying audio into three possible classes - music, speech and birds. This classifier was trained using mfcc, spectral and chroma features.
+
+In order to classify your audio files using any of these classifier, please follow the audio files [structuring guidelines](https://github.com/jsingh811/pyAudioProcessing#training-and-testing-data-structuring). The following commands in Python can be used to classify your data.
+
+```
+from pyAudioProcessing.run_classification import train_and_classify
+
+# musicVSspeech classification
+train_and_classify("../test_data", "classify", ["spectral", "chroma", "mfcc"], "svm", "models/musicVSspeech/svm_clf")
+
+# musicVSspeechVSbirds classification
+train_and_classify("../test_data", "classify", ["spectral", "chroma", "mfcc"], "svm", "models/musicVSspeechVSbirds/svm_clf")
+
+# music genre classification
+train_and_classify("../test_data", "classify", ["gfcc", "spectral", "chroma", "mfcc"], "svm", "models/music genre/svm_clf")
+```
+
 
 ## Training and Classifying Audio files  
 

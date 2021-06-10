@@ -16,7 +16,9 @@ from pyAudioProcessing.trainer import audioTrainTest as aT
 
 
 ### Globals and Variables
-PARSER = argparse.ArgumentParser(description="Run training or testing of audio samples.")
+PARSER = argparse.ArgumentParser(
+    description="Run training or testing of audio samples."
+)
 PARSER.add_argument(
     "-f", "--folder", type=str, required=True,
     help="Dir where data lives in folders names after classes."
@@ -26,12 +28,14 @@ PARSER.add_argument(
     help="Train on data of classify data."
 )
 PARSER.add_argument(
-    "-feats", "--feature-names", type=lambda s: [item for item in s.split(",")],
+    "-feats", "--feature-names",
+    type=lambda s: [item for item in s.split(",")],
     default=["mfcc", "gfcc", "chroma", "spectral"],
     help="Features to compute.",
 )
 PARSER.add_argument(
-    "-clf", "--classifier", type=str, required=True, help="Classifier to use or save.",
+    "-clf", "--classifier", type=str, required=True,
+    help="Classifier to use or save.",
 )
 PARSER.add_argument(
     "-clfname", "--classifier-name", type=str, required=True,
@@ -47,7 +51,10 @@ def train_model(data_dirs, feature_names, classifier, classifier_name):
     by extracting features specified by feature_names
     and saving the classifier as name specified by classifier_name.
     """
-    feature_names = [feat.lower().strip() for feat in feature_names]
+    feature_names = [
+        feat.lower().strip()
+        for feat in feature_names
+    ]
     print("""
         \n Training using features {} with classifier {} that will be saved as {}\n
         """.format(
@@ -56,7 +63,8 @@ def train_model(data_dirs, feature_names, classifier, classifier_name):
     aT.featureAndTrain(
         data_dirs,
         1.0, 1.0,
-        aT.shortTermWindow, aT.shortTermStep,
+        aT.shortTermWindow,
+        aT.shortTermStep,
         classifier,
         classifier_name,
         False,
@@ -69,17 +77,25 @@ def classify_data(data_dirs, feature_names, classifier, classifier_name):
     by extracting features specified by feature_names
     and using the classifier saved by the name specified by classifier_name.
     """
-    feature_names = [feat.lower().strip() for feat in feature_names]
+    feature_names = [
+        feat.lower().strip()
+        for feat in feature_names
+    ]
     print(
         """\n Classifying using features {} with classifier {} that is saved as {}\n
         """.format(
-            ", ".join(feature_names), classifier, classifier_name)
+            ", ".join(feature_names), classifier, classifier_name
         )
+    )
     results = {}
     for fol in data_dirs:
         print("\n", fol)
         results[fol] = {}
-        all_files = [f for f in listdir(fol) if isfile(join(fol, f)) and f.endswith(".wav")]
+        all_files = [
+            f
+            for f in listdir(fol)
+            if isfile(join(fol, f)) and f.endswith(".wav")
+        ]
         correctly_classified = 0
         num_files = len(all_files)
         for f in all_files:
@@ -105,14 +121,24 @@ def classify_data(data_dirs, feature_names, classifier, classifier_name):
         )
     write_to_json('classifier_results.json', results)
 
-def train_and_classify(folder_path, task, feature_names, classifier, classifier_name):
+def train_and_classify(
+    folder_path,
+    task,
+    feature_names,
+    classifier,
+    classifier_name
+):
     """
     Train on the data under folder_path or classify the data in folder path
     using features specified by feature_names and the specified classifier.
     """
     # Get all direcotiers under folder_path
     data_dirs = [x[0] for x in os.walk(folder_path)][1:]
-    print("\n There are {} classes in the specified data folder\n".format(len(data_dirs)))
+    print(
+        "\n There are {} classes in the specified data folder\n".format(
+            len(data_dirs)
+        )
+    )
     if task == "train":
         train_model(data_dirs, feature_names, classifier, classifier_name)
     elif task == "classify":
