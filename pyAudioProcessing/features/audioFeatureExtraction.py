@@ -10,10 +10,19 @@ import matplotlib.pyplot as plt
 
 from pyAudioAnalysis import audioBasicIO
 from pyAudioAnalysis.audioFeatureExtraction import (
-    mfccInitFilterBanks, stChromaFeaturesInit, stChromaFeatures,
-    stZCR, stEnergy, stEnergyEntropy, stSpectralCentroidAndSpread,
-    stSpectralEntropy, stSpectralFlux, stSpectralRollOff, stMFCC,
-    beatExtraction)
+    mfccInitFilterBanks,
+    stChromaFeaturesInit,
+    stChromaFeatures,
+    stZCR,
+    stEnergy,
+    stEnergyEntropy,
+    stSpectralCentroidAndSpread,
+    stSpectralEntropy,
+    stSpectralFlux,
+    stSpectralRollOff,
+    stMFCC,
+    beatExtraction
+)
 from pyAudioProcessing.features import getGfcc
 
 
@@ -113,7 +122,9 @@ def stFeatureExtraction(signal, fs, win, step, feats):
         if "gfcc" in feats:
             curFV[n_time_spectral_feats+n_mfcc_feats:n_time_spectral_feats+n_mfcc_feats+ngfcc, 0] = gfcc.get_gfcc(x)
         if "chroma" in feats:
-            chromaNames, chromaF = stChromaFeatures(X, fs, nChroma, nFreqsPerChroma)
+            chromaNames, chromaF = stChromaFeatures(
+                X, fs, nChroma, nFreqsPerChroma
+            )
             curFV[n_time_spectral_feats + n_mfcc_feats + ngfcc:
                   n_time_spectral_feats + n_mfcc_feats + n_chroma_feats + ngfcc - 1] = \
                 chromaF
@@ -166,8 +177,15 @@ def mtFeatureExtraction(signal, fs, mt_win, mt_step, st_win, st_step, feats):
     return numpy.array(mt_features), st_features, mid_feature_names
 
 
-def dirWavFeatureExtraction(dirName, mt_win, mt_step, st_win, st_step, feats,
-                            compute_beat=False):
+def dirWavFeatureExtraction(
+    dirName,
+    mt_win,
+    mt_step,
+    st_win,
+    st_step,
+    feats,
+    compute_beat=False
+):
     """
     This function extracts the mid-term features of the WAVE files of a particular folder.
 
@@ -212,13 +230,15 @@ def dirWavFeatureExtraction(dirName, mt_win, mt_step, st_win, st_step, feats,
             [mt_term_feats, st_features, mt_feature_names] = \
                 mtFeatureExtraction(x, fs, round(mt_win * fs),
                                     round(mt_step * fs),
-                                    round(fs * st_win), round(fs * st_step), feats)
+                                    round(fs * st_win), round(fs * st_step),
+                                    feats)
             [beat, beat_conf] = beatExtraction(st_features, st_step)
         else:
             [mt_term_feats, _, mt_feature_names] = \
                 mtFeatureExtraction(x, fs, round(mt_win * fs),
                                     round(mt_step * fs),
-                                    round(fs * st_win), round(fs * st_step), feats)
+                                    round(fs * st_win), round(fs * st_step),
+                                    feats)
 
         mt_term_feats = numpy.transpose(mt_term_feats)
         mt_term_feats = mt_term_feats.mean(axis=0)
@@ -238,11 +258,22 @@ def dirWavFeatureExtraction(dirName, mt_win, mt_step, st_win, st_step, feats,
             process_times.append((t2 - t1) / duration)
     if len(process_times) > 0:
         print("Feature extraction complexity ratio: "
-              "{0:.1f} x realtime".format((1.0 / numpy.mean(numpy.array(process_times)))))
+              "{0:.1f} x realtime".format(
+                  (1.0 / numpy.mean(numpy.array(process_times)))
+            )
+        )
     return (all_mt_feats, wav_file_list2, mt_feature_names)
 
 
-def dirsWavFeatureExtraction(dirNames, mt_win, mt_step, st_win, st_step, feats, compute_beat=False):
+def dirsWavFeatureExtraction(
+    dirNames,
+    mt_win,
+    mt_step,
+    st_win,
+    st_step,
+    feats,
+    compute_beat=False
+):
     '''
     Same as dirWavFeatureExtraction, but instead of a single dir it
     takes a list of paths as input and returns a list of feature matrices.
@@ -261,8 +292,11 @@ def dirsWavFeatureExtraction(dirNames, mt_win, mt_step, st_win, st_step, feats, 
     fileNames = []
     feat_names = []
     for i, d in enumerate(dirNames):
-        [f, fn, feature_names] = dirWavFeatureExtraction(d, mt_win, mt_step,
-                                                         st_win, st_step,
+        [f, fn, feature_names] = dirWavFeatureExtraction(d,
+                                                         mt_win,
+                                                         mt_step,
+                                                         st_win,
+                                                         st_step,
                                                          feats,
                                                          compute_beat=compute_beat)
         if f.shape[0] > 0:
@@ -274,4 +308,5 @@ def dirsWavFeatureExtraction(dirNames, mt_win, mt_step, st_win, st_step, feats, 
                 classNames.append(d.split(os.sep)[-2])
             else:
                 classNames.append(d.split(os.sep)[-1])
+    
     return features, classNames, fileNames, feat_names

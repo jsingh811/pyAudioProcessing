@@ -16,13 +16,16 @@ from pyAudioProcessing.trainer import audioTrainTest as aT
 
 
 ### Globals and Variables
-PARSER = argparse.ArgumentParser(description="Extract features from audio samples.")
+PARSER = argparse.ArgumentParser(
+    description="Extract features from audio samples."
+)
 PARSER.add_argument(
     "-f", "--folder", type=str, required=True,
     help="Dir where data lives in folders names after classes."
 )
 PARSER.add_argument(
-    "-feats", "--feature-names", type=lambda s: [item for item in s.split(",")],
+    "-feats", "--feature-names",
+    type=lambda s: [item for item in s.split(",")],
     default=["mfcc", "gfcc", "chroma", "spectral"],
     help="Features to compute.",
 )
@@ -46,12 +49,16 @@ def get_features(folder_path, feature_names):
     print("""
         \n Extracting features {} \n
         """.format(
-            ", ".join(feature_names))
+            ", ".join(
+                feature_names
+            )
+        )
     )
     features, class_names, file_names, feat_names = aT.extract_features(
         data_dirs,
         1.0, 1.0,
-        aT.shortTermWindow, aT.shortTermStep,
+        aT.shortTermWindow,
+        aT.shortTermStep,
         False,
         feature_names
     )

@@ -14,24 +14,41 @@ import numpy
 from pyAudioProcessing.features import filters
 
 ################################################################################
+# Globals
+################################################################################
+
+CEP_COEF_START = 1
+CEP_COEF_END = 23
+
+################################################################################
 # Classes
 ################################################################################
 
 class GFCCFeature(object):
     """
     With sampling frequency as input, creates ERB Filter and gets
-    Gammatone Frequency Cepstral Coefficients (GFCC) for an input audio signal window.
+    Gammatone Frequency Cepstral Coefficients (GFCC) for an input
+    audio signal window.
     """
-    def __init__(self, fs):
+    def __init__(
+        self,
+        fs,
+        cc_start=CEP_COEF_START,
+        cc_end=CEP_COEF_END
+    ):
         self.fs = fs
         self.erb_filter = self.erb_filter()
+        self.cc_start = cc_start
+        self.cc_end = cc_end
 
     def dct_matrix(self, n):
         """
         Return the DCT-II matrix of order n as a numpy array.
         """
         x, y = numpy.meshgrid(range(n), range(n))
-        D = math.sqrt(2.0 / n) * numpy.cos(math.pi * (2*x+1) * y / (2*n))
+        D = math.sqrt(2.0 / n) * numpy.cos(
+            math.pi * (2*x+1) * y / (2*n)
+        )
         D[0] /= math.sqrt(2)
         return D
 
@@ -39,22 +56,37 @@ class GFCCFeature(object):
         """
         For the input sampling frequency, get the ERB filters.
         """
-        return filters.make_erb_filters(self.fs, filters.centre_freqs(self.fs, 64, 50))
+        filters = filters.make_erb_filters(
+            self.fs,
+            filters.centre_freqs(self.fs, 64, 50)
+        )
+        
+        return filters
 
     def mean_var_norm(self, x, std=True):
         """
         Returns mean variance normalization.
         """
         norm = x - numpy.mean(x, axis=0)
+        
         if std is True:
             norm = norm / numpy.std(norm)
+            
         return norm
 
-    def get_gfcc(self, signal, ccST=1, ccEND=23, norm=False):
+    def get_gfcc(
+        self,
+        signal,
+        ccST=self.cc_start,
+        ccEND=self.cc_end,
+        norm=False
+    ):
         """
         Get GFCC feature.
         """
-        erb_filterbank = filters.erb_filterbank(numpy.array(signal), self.erb_filter)
+        erb_filterbank = filters.erb_filterbank(
+            numpy.array(signal), self.erb_filter
+        )
         inData = erb_filterbank[10:,:]
         inData = numpy.absolute(inData)
         inData = numpy.power(inData, 1/3)
