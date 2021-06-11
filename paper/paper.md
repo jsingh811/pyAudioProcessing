@@ -1,5 +1,5 @@
 ---
-title: 'pyAudioProcessing: Audio Processing, Feature Extraction and building Machine Learning Models from Audio Data'
+title: 'pyAudioProcessing: Audio Processing, Feature Extraction and Building Machine Learning Models from Audio Data'
 tags:
   - Python
   - audio
