@@ -205,6 +205,44 @@ convert_files_to_wav(dir_path, audio_format="mp4")
 
 ```
 
+
+## Audio cleaning
+
+To remove low-activity regions from your audio clip, the following sample usage can be referred to.
+
+```
+from pyAudioProcessing import clean
+
+clean.remove_silence(
+	      <path to wav file>,
+               output_file=<path where you want to store cleaned wav file>
+)
+```
+
+## Audio visualization
+
+To see time-domain view of the audios, and the spectrogram of the audios, please refer to the following sample usage.
+
+```
+from pyAudioProcessing import plot
+
+# spectrogram plot
+plot.spectrogram(
+     <path to wav file>,
+    show=True, # set to False if you do not want the plot to show
+    save_to_disk=True, # set to False if you do not want the plot to save
+    output_file=<path where you want to store spectrogram as a png>
+)
+
+# time-series plot
+plot.time(
+     <path to wav file>,
+    show=True, # set to False if you do not want the plot to show
+    save_to_disk=True, # set to False if you do not want the plot to save
+    output_file=<path where you want to store the plot as a png>
+)
+```
+
 ## Author  
 
 Jyotika Singh  
