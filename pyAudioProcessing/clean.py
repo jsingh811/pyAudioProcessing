@@ -23,23 +23,35 @@ def remove_silence(
     Remove silences from input audio file.
     """
     sampling_rate, signal = read_audio(input_file)
-    signal = numpy.array(
-        [
-            list(i)
-            for i in signal
-            if not numpy.all((i == 0))
-        ]
-    )
-    mean_signal = [numpy.mean(list(i)) for i in signal]
-    thrs_p = thr * max(mean_signal)
-    thrs_n = thr * min(mean_signal)
-    signal = numpy.array(
-        [
-            list(i)
-            for i in signal
-            if numpy.all((i > thrs_p)) or numpy.all((i < thrs_n))
-        ]
-    )
+    
+    if len(numpy.array(signal[0], ndmin=1)) > 1:
+        signal = numpy.array(
+            [
+                list(i)
+                for i in signal
+                if not numpy.all((i == 0))
+            ]
+        )
+        mean_signal = [numpy.mean(list(i)) for i in signal]
+        thrs_p = thr * max(mean_signal)
+        thrs_n = thr * min(mean_signal)
+        signal = numpy.array(
+            [
+                list(i)
+                for i in signal
+                if numpy.all((i > thrs_p)) or numpy.all((i < thrs_n))
+            ]
+        )
+    else:
+        thrs_p = thr * max(signal)
+        thrs_n = thr * min(signal)
+        signal = numpy.array(
+            [
+                i
+                for i in signal
+                if i > thrs_p or i < thrs_n
+            ]
+        )
     wavfile.write(output_file, sampling_rate, signal)
 
 
