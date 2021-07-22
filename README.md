@@ -243,6 +243,34 @@ plot.time(
 )
 ```
 
+## Citation 
+
+Using pyAudioProcessing in your research? Please cite as follows.
+
+
+```
+Jyotika Singh. (2021, July 22). jsingh811/pyAudioProcessing: Audio processing, feature extraction and classification (Version v1.2.0). Zenodo. http://doi.org/10.5281/zenodo.5121041
+```
+[![DOI](https://zenodo.org/badge/197088356.svg)](https://zenodo.org/badge/latestdoi/197088356)
+
+
+Bibtex
+```
+@software{jyotika_singh_2021_5121041,
+  author       = {Jyotika Singh},
+  title        = {{jsingh811/pyAudioProcessing: Audio processing, 
+                   feature extraction and classification}},
+  month        = jul,
+  year         = 2021,
+  publisher    = {Zenodo},
+  version      = {v1.2.0},
+  doi          = {10.5281/zenodo.5121041},
+  url          = {https://doi.org/10.5281/zenodo.5121041}
+}
+```
+
+
+
 ## Author  
 
 Jyotika Singh  
