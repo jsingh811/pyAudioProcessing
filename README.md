@@ -118,6 +118,8 @@ train_and_classify("../test_data", "classify", ["gfcc", "spectral", "chroma", "m
 
 Audio data can be trained, tested and classified using pyAudioProcessing. Please see [feature options](https://github.com/jsingh811/pyAudioProcessing#feature-options) and [classifier model options](https://github.com/jsingh811/pyAudioProcessing#classifier-options) for more information.   
 
+Sample spoken location name dataset for spoken instances of "london" and "boston" can be found [here](https://drive.google.com/drive/folders/1AayPvvgZh4Jvi6LYDR7YS_ar7l3gEtAy?usp=sharing).
+
 ### Examples  
 
 Code example of using `gfcc,spectral,chroma` feature and `svm` classifier. Sample data can be found [here](https://github.com/jsingh811/pyAudioProcessing/tree/master/data_samples). Please refer to the section on [Training and Testing Data structuring](https://github.com/jsingh811/pyAudioProcessing#training-and-testing-data-structuring) to use your own data instead.   
