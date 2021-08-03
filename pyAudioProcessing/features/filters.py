@@ -119,8 +119,8 @@ def make_erb_filters(fs, centre_freqs, width=1.0):
     computing four separate second order filters. This avoids a big problem with
     round off errors in cases of very small cfs (100Hz) and large sample rates
     (44kHz). The problem is caused by roundoff error when a number of poles are
-    combined, all very close to the unit circle. Small errors in the eigth order
-    coefficient, are multiplied when the eigth root is taken to give the pole
+    combined, all very close to the unit circle. Small errors in the eighth order
+    coefficient, are multiplied when the eighth root is taken to give the pole
     location. These small errors lead to poles outside the unit circle and
     instability. Thanks to Julius Smith for leading me to the proper
     explanation.
