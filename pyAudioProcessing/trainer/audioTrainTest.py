@@ -239,7 +239,7 @@ def featureAndTrain(list_of_dirs, mt_win, mt_step, st_win, st_step,
     '''
     This function is used as a wrapper to segment-based audio feature extraction and classifier training.
     ARGUMENTS:
-        list_of_dirs:        list of paths of directories. Each directory contains a signle audio class whose samples are stored in separate WAV files.
+        list_of_dirs:        list of paths of directories. Each directory contains a single audio class whose samples are stored in separate WAV files.
         mt_win, mt_step:        mid-term window length and step
         st_win, st_step:        short-term window and step
         classifier_type:        "svm" or "knn" or "randomforest" or "gradientboosting" or "extratrees"
