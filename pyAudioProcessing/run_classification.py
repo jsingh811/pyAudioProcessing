@@ -42,6 +42,11 @@ PARSER.add_argument(
     help="Name of the classifier to use or save.",
 )
 
+PARSER.add_argument(
+    "-logfile", "--logfile", type=str, required=False,
+    help="Path of file to log results in.",
+    default="classifier_results"
+)
 
 ### Functions
 
@@ -71,7 +76,7 @@ def train_model(data_dirs, feature_names, classifier, classifier_name):
         feats=feature_names
     )
 
-def classify_data(data_dirs, feature_names, classifier, classifier_name):
+def classify_data(data_dirs, feature_names, classifier, classifier_name, verbose=True, logfile=False):
     """
     Classify data in data_dirs
     by extracting features specified by feature_names
@@ -81,15 +86,17 @@ def classify_data(data_dirs, feature_names, classifier, classifier_name):
         feat.lower().strip()
         for feat in feature_names
     ]
-    print(
-        """\n Classifying using features {} with classifier {} that is saved as {}\n
-        """.format(
-            ", ".join(feature_names), classifier, classifier_name
+    if verbose:
+        print(
+            """\n Classifying using features {} with classifier {} that is saved as {}\n
+            """.format(
+                ", ".join(feature_names), classifier, classifier_name
+            )
         )
-    )
     results = {}
     for fol in data_dirs:
-        print("\n", fol)
+        if verbose:
+            print("\n", fol)
         results[fol] = {}
         all_files = [
             f
@@ -112,21 +119,28 @@ def classify_data(data_dirs, feature_names, classifier, classifier_name):
             indx = list(res[1]).index(max(res[1]))
             if res[2][indx] == fol.split("/")[-1]:
                 correctly_classified += 1
-        if correctly_classified == 0:
-            print("Either you passed in data with unknown classes, or")
-        print(
-            "{} out of {} instances were classified correctly".format(
-                correctly_classified, num_files
+        if verbose:
+            if correctly_classified == 0:
+                print("Either you passed in data with unknown classes, or")
+            print(
+                "{} out of {} instances were classified correctly".format(
+                    correctly_classified, num_files
+                )
             )
+    if logfile:
+        write_to_json(
+            logfile+"_"+classifier_name.split("/")[-1]+'.json', 
+            results
         )
-    write_to_json('classifier_results.json', results)
+    return results
 
 def train_and_classify(
     folder_path,
     task,
     feature_names,
     classifier,
-    classifier_name
+    classifier_name,
+    logfile
 ):
     """
     Train on the data under folder_path or classify the data in folder path
@@ -142,7 +156,48 @@ def train_and_classify(
     if task == "train":
         train_model(data_dirs, feature_names, classifier, classifier_name)
     elif task == "classify":
-        classify_data(data_dirs, feature_names, classifier, classifier_name)
+        results = classify_data(data_dirs, feature_names, classifier, classifier_name, logfile=logfile)
+        return results
+
+
+def classify_pretrained(
+    folder_path,
+    classifier_name
+):
+    """
+    Train on the data under folder_path or classify the data in folder path
+    using features specified by feature_names and the specified classifier.
+    """
+    # Get all directories under folder_path
+    data_dirs = [x[0] for x in os.walk(folder_path)][1:]
+
+    if classifier_name == "speechVSmusic":
+        feature_names = ["spectral", "chroma", "mfcc"]
+        classifier_name = "models/speechVSmusic/svm_clf"
+        classifier = "svm"
+    elif classifier_name == "music genre":
+        feature_names = ["gfcc", "spectral", "chroma", "mfcc"]
+        classifier_name = "models/music genre/svm_clf"
+        classifier = "svm"
+    elif classifier_name == "speechVSmusicVSbirds":
+        feature_names = ["spectral", "chroma", "mfcc"]
+        classifier_name = "models/speechVSmusicVSbirds/svm_clf"
+        classifier = "svm"
+    else:
+        raise("Classifier does not exist")
+    return classify_data(data_dirs, feature_names, classifier, classifier_name, verbose=False)
+
+
+def classify_ms(folder_path):
+    return classify_pretrained(folder_path, "speechVSmusic")
+
+
+def classify_msb(folder_path):
+    return classify_pretrained(folder_path, "speechVSmusicVSbirds")
+
+
+def classify_genre(folder_path):
+    return classify_pretrained(folder_path, "music genre")
 
 
 if __name__ == "__main__":
@@ -152,5 +207,6 @@ if __name__ == "__main__":
         ARGS.task,
         ARGS.feature_names,
         ARGS.classifier,
-        ARGS.classifier_name
+        ARGS.classifier_name,
+        ARGS.logfile
     )
