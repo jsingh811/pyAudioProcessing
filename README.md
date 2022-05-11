@@ -29,6 +29,46 @@ You can also get the requirements by running
 pip install -r requirements/requirements.txt
 ``` 
 
+
+## Contents  
+[Data structuring](https://github.com/jsingh811/pyAudioProcessing#training-and-testing-data-structuring)  
+[Feature and Classifier model options](https://github.com/jsingh811/pyAudioProcessing#options)  
+[Pre-trained models](https://github.com/jsingh811/pyAudioProcessing#classifying-with-pre-trained-models)  
+[Extracting numerical features from audio](https://github.com/jsingh811/pyAudioProcessing#extracting-features-from-audios)  
+[Building custom classification models](https://github.com/jsingh811/pyAudioProcessing#training-and-classifying-audio-files)  
+[Audio cleaning](https://github.com/jsingh811/pyAudioProcessing#audio-cleaning)  
+[Audio format conversion](https://github.com/jsingh811/pyAudioProcessing#audio-format-conversion)  
+[Audio visualization](https://github.com/jsingh811/pyAudioProcessing#audio-visualization)  
+
+Please refer to the [Wiki](https://github.com/jsingh811/pyAudioProcessing/wiki) for more details.    
+
+## Citation
+
+Using pyAudioProcessing in your research? Please cite as follows.
+
+
+```
+Jyotika Singh. (2021, July 22). jsingh811/pyAudioProcessing: Audio processing, feature extraction and classification (Version v1.2.0). Zenodo. http://doi.org/10.5281/zenodo.5121041
+```
+[![DOI](https://zenodo.org/badge/197088356.svg)](https://zenodo.org/badge/latestdoi/197088356)
+
+
+Bibtex
+```
+@software{jyotika_singh_2021_5121041,
+  author       = {Jyotika Singh},
+  title        = {{jsingh811/pyAudioProcessing: Audio processing,
+                   feature extraction and classification}},
+  month        = jul,
+  year         = 2021,
+  publisher    = {Zenodo},
+  version      = {v1.2.0},
+  doi          = {10.5281/zenodo.5121041},
+  url          = {https://doi.org/10.5281/zenodo.5121041}
+}
+```
+
+
 ## Options
 
 ### Feature options  
@@ -243,36 +283,9 @@ plot.time(
 )
 ```
 
-## Citation
-
-Using pyAudioProcessing in your research? Please cite as follows.
-
-
-```
-Jyotika Singh. (2021, July 22). jsingh811/pyAudioProcessing: Audio processing, feature extraction and classification (Version v1.2.0). Zenodo. http://doi.org/10.5281/zenodo.5121041
-```
-[![DOI](https://zenodo.org/badge/197088356.svg)](https://zenodo.org/badge/latestdoi/197088356)
-
-
-Bibtex
-```
-@software{jyotika_singh_2021_5121041,
-  author       = {Jyotika Singh},
-  title        = {{jsingh811/pyAudioProcessing: Audio processing,
-                   feature extraction and classification}},
-  month        = jul,
-  year         = 2021,
-  publisher    = {Zenodo},
-  version      = {v1.2.0},
-  doi          = {10.5281/zenodo.5121041},
-  url          = {https://doi.org/10.5281/zenodo.5121041}
-}
-```
-
 
 ## Author  
 
 Jyotika Singh  
-Data Scientist  
 https://twitter.com/jyotikasingh_/
 https://www.linkedin.com/in/jyotikasingh/  
