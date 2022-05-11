@@ -3,7 +3,7 @@
 ![pyaudioprocessing](https://user-images.githubusercontent.com/16875926/131924198-e34abe7e-12d8-41f9-926d-db199734dcaa.png)
 
 A Python based library for processing audio data into features (GFCC, MFCC, spectral, chroma) and building Machine Learning models.  
-This was written using `Python 3.7.6`, and has been tested to work with Python >= 3.6, <4.  
+This was written using `Python 3.7.6`, and has been tested to work with Python >= 3.7, <4.  You can run this on 3.6x as well by changing numpy version in the requirements to 1.19.5.  
 
 
 ## Getting Started  
@@ -28,12 +28,7 @@ You can also get the requirements by running
 
 ```
 pip install -r requirements/requirements.txt
-```  
-
-If you are on Python 3.9 and experience any issues with the code samples regarding numpy, please run  
-```
-pip install -U numpy
-```
+``` 
 
 ## Options
 
@@ -203,7 +198,7 @@ from pyAudioProcessing.convert_audio import convert_files_to_wav
 # dir_path is the path to the directory/folder on your machine containing audio files
 dir_path = "data/mp4_files"
 
-# simple change audio_format to "mp3", "m4a" or "acc" depending on the format
+# simply change audio_format to "mp3", "m4a" or "acc" depending on the format
 # of audio that you are trying to convert to wav
 convert_files_to_wav(dir_path, audio_format="mp4")
 
@@ -274,7 +269,6 @@ Bibtex
   url          = {https://doi.org/10.5281/zenodo.5121041}
 }
 ```
-
 
 
 ## Author  
