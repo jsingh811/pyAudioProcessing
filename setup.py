@@ -1,6 +1,6 @@
 import os
 import codecs
-import setuptools
+from setuptools import setup, find_packages
 
 PROJECT = os.path.abspath(os.path.dirname(__file__))
 REQUIREMENTS_PATH = "requirements/requirements.txt"
@@ -21,14 +21,14 @@ def get_requirements(path=REQUIREMENTS_PATH):
         requirements.append(line.strip())
     return requirements
 
-setuptools.setup(
+setup(
    name='pyAudioProcessing',
    version='1.1.10',
    description='Audio processing-feature extraction and building machine learning models from audio data.',
    long_description=long_description,
    long_description_content_type="text/markdown",
    author='Jyotika Singh',
-   packages=setuptools.find_packages(where=PROJECT),
+   packages=find_packages(where=PROJECT),
    url="https://github.com/jsingh811/pyAudioProcessing",
    install_requires=get_requirements(),
    python_requires='>=3.6, <4',
