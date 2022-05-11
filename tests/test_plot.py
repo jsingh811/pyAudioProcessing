@@ -16,5 +16,5 @@ def test_spectrogram():
     """
     test_root = str(Path(__file__).parent.parent)
     data_dir = os.path.join(test_root, "data_samples/testing")
-    file_path = os.path.join(data_dir, "nearhou.wav")
+    file_path = os.path.join(data_dir, "music/nearhou.wav")
     plot.spectrogram(file_path, show=False, save_to_disk=False)
