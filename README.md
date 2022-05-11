@@ -35,7 +35,7 @@ If you are on Python 3.9 and experience any issues with the code samples regardi
 pip install -U numpy
 ```
 
-## Options 
+## Options
 
 ### Feature options  
 
@@ -101,16 +101,21 @@ There are three models that have been pre-trained and provided in this project u
 In order to classify your audio files using any of these classifier, please follow the audio files [structuring guidelines](https://github.com/jsingh811/pyAudioProcessing#training-and-testing-data-structuring). The following commands in Python can be used to classify your data.
 
 ```
-from pyAudioProcessing.run_classification import train_and_classify
+from pyAudioProcessing.run_classification import classify_ms, classify_msb, classify_genre
 
 # musicVSspeech classification
-train_and_classify("../test_data", "classify", ["spectral", "chroma", "mfcc"], "svm", "models/musicVSspeech/svm_clf")
+results_music_speech = classify_ms("../data")
 
 # musicVSspeechVSbirds classification
-train_and_classify("../test_data", "classify", ["spectral", "chroma", "mfcc"], "svm", "models/musicVSspeechVSbirds/svm_clf")
+results_music_speech_birds = classify_msb("../data")
 
 # music genre classification
-train_and_classify("../test_data", "classify", ["gfcc", "spectral", "chroma", "mfcc"], "svm", "models/music genre/svm_clf")
+results_music_genre = classify_genre("../data")
+```
+
+Sample results look like  
+```
+{'../data/music': {'beatles.wav': {'probabilities': [0.8899067858599712, 0.011922234412695229, 0.0981709797273336], 'classes': ['music', 'speech', 'birds']}, ...}
 ```
 
 
@@ -133,9 +138,9 @@ The above logs files analyzed, hyperparameter tuning results for recall, precisi
 To classify audio samples with the classifier you created above,
 ```
 # Classify data
-train_and_classify("data_samples/testing", "classify", ["gfcc", "spectral", "chroma"], "svm", "svm_clf")
+classifications = train_and_classify("data_samples/testing", "classify", ["gfcc", "spectral", "chroma"], "svm", "svm_clf")
 ```  
-The above logs the filename where the classification results are saved along with the details about testing files and the classifier used.
+The above logs the filename where the classification results are saved along with the details about testing files and the classifier used if you pass in logfile=True into the function call.
 
 
 If you cloned the project via git, the following command line example of training and classification with `gfcc,spectral,chroma` features and `svm` classifier can be used as well. Sample data can be found [here](https://github.com/jsingh811/pyAudioProcessing/tree/master/data_samples). Please refer to the section on [Training and Testing Data structuring](https://github.com/jsingh811/pyAudioProcessing#training-and-testing-data-structuring) to use your own data instead.   
@@ -147,10 +152,9 @@ python pyAudioProcessing/run_classification.py -f "data_samples/training" -clf "
 Classifying:   
 
 ```
-python pyAudioProcessing/run_classification.py -f "data_samples/testing" -clf "svm" -clfname "svm_clf" -t "classify" -feats "gfcc,spectral,chroma"
+python pyAudioProcessing/run_classification.py -f "data_samples/testing" -clf "svm" -clfname "svm_clf" -t "classify" -feats "gfcc,spectral,chroma" -logfile "../classifier_results"
 ```  
-Classification results get saved in `classifier_results.json`.  
-
+Classification results get saved in `../classifier_results_svm_clf.json`.  
 
 ## Extracting features from audios  
 
@@ -176,7 +180,7 @@ features = get_features("data_samples/testing", ["gfcc", "mfcc"])
 To save features in a json file,
 ```
 from pyAudioProcessing import utils
-utils.write_to_json("audio_features.json",features)
+utils.write_to_json("audio_features.json", features)
 ```  
 
 If you cloned the project via git, the following command line example of for `gfcc` and `mfcc` feature extractions can be used as well. The features argument should be a comma separated string, example `gfcc,mfcc`.  
@@ -245,7 +249,7 @@ plot.time(
 )
 ```
 
-## Citation 
+## Citation
 
 Using pyAudioProcessing in your research? Please cite as follows.
 
@@ -260,7 +264,7 @@ Bibtex
 ```
 @software{jyotika_singh_2021_5121041,
   author       = {Jyotika Singh},
-  title        = {{jsingh811/pyAudioProcessing: Audio processing, 
+  title        = {{jsingh811/pyAudioProcessing: Audio processing,
                    feature extraction and classification}},
   month        = jul,
   year         = 2021,
