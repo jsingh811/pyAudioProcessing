@@ -7,6 +7,7 @@ Created on Mon Jul 19 18:22:15 2021
 """
 # Imports
 import os
+import sys
 import numpy
 import matplotlib.pyplot as plot
 from pyAudioProcessing.utils import read_audio
@@ -22,9 +23,9 @@ def spectrogram(
     sampling_rate, signal = read_audio(input_file)
     # Prepare the signal for spectrogram computation
     if len(signal) > 0:
-        if len(numpy.array(signal[0], ndim=1)) == 1:
+        if len(numpy.array(signal[0], ndmin=1)) == 1:
             signal = [i for i in signal]
-        elif len(numpy.array(signal[0], ndim=1)) > 1:
+        elif len(numpy.array(signal[0], ndmin=1)) > 1:
             signal = [list(i)[0] for i in signal]
     # Plot the signal's spectrogram
     plot.title('Spectrogram')
@@ -51,5 +52,3 @@ def time(input_file, show=True, save_to_disk=True, output_file="time.png"):
         plot.savefig(output_file)
     if show:
         plot.show()
-
-
