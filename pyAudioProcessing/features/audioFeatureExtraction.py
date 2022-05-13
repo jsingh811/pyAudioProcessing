@@ -1,4 +1,4 @@
-### This script is derived https://github.com/tyiannak/pyAudioAnalysis/blob/master/pyAudioAnalysis/audioFeatureExtraction.py)
+### This script derives some functions from https://github.com/tyiannak/pyAudioAnalysis/blob/master/pyAudioAnalysis/audioFeatureExtraction.py)
 import time
 import os
 import glob
@@ -61,12 +61,12 @@ def stFeatureExtraction(signal, fs, win, step, feats):
     MAX = (numpy.abs(signal)).max()
     signal = (signal - DC) / (MAX + 0.0000000001)
 
-    N = len(signal)                                # total number of samples
+    N = len(signal) # total number of samples
     cur_p = 0
     count_fr = 0
     nFFT = int(win / 2)
 
-    [fbank, freqs] = mfccInitFilterBanks(fs, nFFT)                # compute the triangular filter banks used in the mfcc calculation
+    [fbank, freqs] = mfccInitFilterBanks(fs, nFFT) # compute the triangular filter banks used in the mfcc calculation
 
     n_harmonic_feats = 0
 
@@ -176,6 +176,79 @@ def mtFeatureExtraction(signal, fs, mt_win, mt_step, st_win, st_step, feats):
             cur_p += mt_step_ratio
     return numpy.array(mt_features), st_features, mid_feature_names
 
+def dirWavFeatureExtractionFiles(
+    file_names,
+    mt_win,
+    mt_step,
+    st_win,
+    st_step,
+    feats,
+    compute_beat=False
+):
+    all_mt_feats = numpy.array([])
+    process_times = []
+    wav_file_list = []
+    for file in file_names:
+        if file.endswith(".wav"):
+            wav_file_list.append(file)
+        # INCLUDE reading only select file names here
+    wav_file_list = sorted(wav_file_list)
+    wav_file_list2, mt_feature_names = [], []
+    for i, wavFile in enumerate(wav_file_list):
+        print("Analyzing file {0:d} of "
+              "{1:d}: {2:s}".format(i+1,
+                                    len(wav_file_list),
+                                    wavFile))
+        if os.stat(wavFile).st_size == 0:
+            print("   (EMPTY FILE -- SKIPPING)")
+            continue
+        [fs, x] = audioBasicIO.readAudioFile(wavFile)
+        if isinstance(x, int):
+            continue
+
+        t1 = time.time()
+        x = audioBasicIO.stereo2mono(x)
+        if x.shape[0]<float(fs)/5:
+            print("  (AUDIO FILE TOO SMALL - SKIPPING)")
+            continue
+        wav_file_list2.append(wavFile)
+        if compute_beat:
+            [mt_term_feats, st_features, mt_feature_names] = \
+                mtFeatureExtraction(x, fs, round(mt_win * fs),
+                                    round(mt_step * fs),
+                                    round(fs * st_win), round(fs * st_step),
+                                    feats)
+            [beat, beat_conf] = beatExtraction(st_features, st_step)
+        else:
+            [mt_term_feats, _, mt_feature_names] = \
+                mtFeatureExtraction(x, fs, round(mt_win * fs),
+                                    round(mt_step * fs),
+                                    round(fs * st_win), round(fs * st_step),
+                                    feats)
+
+        mt_term_feats = numpy.transpose(mt_term_feats)
+        mt_term_feats = mt_term_feats.mean(axis=0)
+        # long term averaging of mid-term statistics
+        if (not numpy.isnan(mt_term_feats).any()) and \
+                (not numpy.isinf(mt_term_feats).any()):
+            if compute_beat:
+                mt_term_feats = numpy.append(mt_term_feats, beat)
+                mt_term_feats = numpy.append(mt_term_feats, beat_conf)
+            if len(all_mt_feats) == 0:
+                # append feature vector
+                all_mt_feats = mt_term_feats
+            else:
+                all_mt_feats = numpy.vstack((all_mt_feats, mt_term_feats))
+            t2 = time.time()
+            duration = float(len(x)) / fs
+            process_times.append((t2 - t1) / duration)
+    if len(process_times) > 0:
+        print("Feature extraction complexity ratio: "
+              "{0:.1f} x realtime".format(
+                  (1.0 / numpy.mean(numpy.array(process_times)))
+            )
+        )
+    return (all_mt_feats, wav_file_list2, mt_feature_names)
 
 def dirWavFeatureExtraction(
     dirName,
@@ -205,6 +278,7 @@ def dirWavFeatureExtraction(
     wav_file_list = []
     for files in types:
         wav_file_list.extend(glob.glob(os.path.join(dirName, files)))
+        # INCLUDE reading only select file names here
 
     wav_file_list = sorted(wav_file_list)
     wav_file_list2, mt_feature_names = [], []
@@ -272,7 +346,9 @@ def dirsWavFeatureExtraction(
     st_win,
     st_step,
     feats,
-    compute_beat=False
+    compute_beat=False,
+    use_file_names=False,
+    file_names={}
 ):
     '''
     Same as dirWavFeatureExtraction, but instead of a single dir it
@@ -291,6 +367,24 @@ def dirsWavFeatureExtraction(
     classNames = []
     fileNames = []
     feat_names = []
+    if use_file_names:
+        for d in file_names:
+            [f, fn, feature_names] = dirWavFeatureExtractionFiles(
+                file_names[d],
+                mt_win,
+                mt_step,
+                st_win,
+                st_step,
+                feats,
+                compute_beat=compute_beat)
+            if f.shape[0] > 0:
+                 # if at least one audio file has been found in the provided folder:
+                 features.append(f)
+                 fileNames.append(fn)
+                 feat_names.append(feature_names)
+                 classNames.append(d)
+        return features, classNames, fileNames, feat_names
+
     for i, d in enumerate(dirNames):
         [f, fn, feature_names] = dirWavFeatureExtraction(d,
                                                          mt_win,
@@ -308,5 +402,5 @@ def dirsWavFeatureExtraction(
                 classNames.append(d.split(os.sep)[-2])
             else:
                 classNames.append(d.split(os.sep)[-1])
-    
+
     return features, classNames, fileNames, feat_names

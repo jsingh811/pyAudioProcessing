@@ -1,4 +1,4 @@
-### This script is derived from https://github.com/tyiannak/pyAudioAnalysis/blob/master/pyAudioAnalysis/audioTrainTest.py)
+### This script derives some functions from https://github.com/tyiannak/pyAudioAnalysis/blob/master/pyAudioAnalysis/audioTrainTest.py)
 import sys
 import numpy
 import os
@@ -187,7 +187,7 @@ def evaluateclassifier(features, class_names, n_exp, classifier_name, Params, pa
         return Params[best_f1_ind]
 
 def extract_raw_features(
-    list_of_dirs, mt_win, mt_step, st_win, st_step, compute_beat, feats
+    list_of_dirs, mt_win, mt_step, st_win, st_step, compute_beat, feats, use_file_names=False, file_names={}
 ):
     """
     Extracts raw features specified by feats.
@@ -200,7 +200,9 @@ def extract_raw_features(
         st_win,
         st_step,
         compute_beat=compute_beat,
-        feats=feats
+        feats=feats,
+        use_file_names=use_file_names,
+        file_names=file_names
     )
     return features, classNames, fileNames, featureNames
 
@@ -221,21 +223,22 @@ def format_features(features):
     return formatted_features
 
 def extract_features(
-    list_of_dirs, mt_win, mt_step, st_win, st_step, compute_beat, feats
+    list_of_dirs, mt_win, mt_step, st_win, st_step, compute_beat, feats, use_file_names=False, file_names={}
 ):
     """
     Extracts features and returns features, class names, file names
     and feature names.
     """
     features, classNames, fileNames, featureNames = extract_raw_features(
-        list_of_dirs, mt_win, mt_step, st_win, st_step, compute_beat, feats
+        list_of_dirs, mt_win, mt_step, st_win, st_step, compute_beat, feats, use_file_names=use_file_names, file_names=file_names
     )
     features = format_features(features)
     return features, classNames, fileNames, featureNames
 
 def featureAndTrain(list_of_dirs, mt_win, mt_step, st_win, st_step,
                     classifier_type, model_name,
-                    compute_beat=False, perTrain=0.90, feats=["gfcc", "mfcc", "spectral", "chroma"]):
+                    compute_beat=False, perTrain=0.90, feats=["gfcc", "mfcc", "spectral", "chroma"],
+                    use_file_names=False, file_names={}):
     '''
     This function is used as a wrapper to segment-based audio feature extraction and classifier training.
     ARGUMENTS:
@@ -255,7 +258,9 @@ def featureAndTrain(list_of_dirs, mt_win, mt_step, st_win, st_step,
                                             st_win,
                                             st_step,
                                             compute_beat=compute_beat,
-                                            feats=feats)
+                                            feats=feats,
+                                            use_file_names=use_file_names,
+                                            file_names=file_names)
 
     if len(features) == 0:
         print("trainSVM_feature ERROR: No data found in any input folder!")
