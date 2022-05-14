@@ -7,9 +7,9 @@ Created on Thu Jun 10 15:23:55 2021
 """
 # Imports
 import os
-import numpy
+import numpy as np
 from scipy.io import wavfile
-from pyAudioProcessing.utils import read_audio
+from pyAudioProcessing.utils import read_audio, convert_audio_to_mono
 
 # Globals
 LOW_PT_THRESHOLD = 0.01
@@ -17,35 +17,36 @@ LOW_PT_THRESHOLD = 0.01
 # Functions
 
 def remove_silence(
-    input_file, output_file="without_sil.wav", thr=LOW_PT_THRESHOLD
+    input_file, output_file="clean.wav", thr=LOW_PT_THRESHOLD
 ):
     """
     Remove silences from input audio file.
+    Works for both stereo and mono type of audios.
+    TODO: make more efficient.
     """
     sampling_rate, signal = read_audio(input_file)
-    
-    if len(numpy.array(signal[0], ndmin=1)) > 1:
-        signal = numpy.array(
+    if len(np.array(signal[0], ndmin=1)) > 1:
+        signal = np.array(
             [
                 list(i)
                 for i in signal
-                if not numpy.all((i == 0))
+                if not np.all((i == 0))
             ]
         )
-        mean_signal = [numpy.mean(list(i)) for i in signal]
+        mean_signal = convert_audio_to_mono(signal)
         thrs_p = thr * max(mean_signal)
         thrs_n = thr * min(mean_signal)
-        signal = numpy.array(
+        signal = np.array(
             [
                 list(i)
                 for i in signal
-                if numpy.all((i > thrs_p)) or numpy.all((i < thrs_n))
+                if np.all((i > thrs_p)) or np.all((i < thrs_n))
             ]
         )
     else:
         thrs_p = thr * max(signal)
         thrs_n = thr * min(signal)
-        signal = numpy.array(
+        signal = np.array(
             [
                 i
                 for i in signal
@@ -53,5 +54,3 @@ def remove_silence(
             ]
         )
     wavfile.write(output_file, sampling_rate, signal)
-
-
