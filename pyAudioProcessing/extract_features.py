@@ -5,32 +5,22 @@ Created on Fri Mar 19 15:55:23 2021
 
 @author: jsingh
 """
-### Imports
-import argparse
+
+################################################################################
+# Imports
+################################################################################
+
 import os
 from os import listdir
 from os.path import isfile, join
 
-from pyAudioProcessing.utils import write_to_json
+from pyAudioProcessing.utils import ST_WIN, ST_STEP
 from pyAudioProcessing.trainer import audioTrainTest as aT
 
 
-### Globals and Variables
-PARSER = argparse.ArgumentParser(
-    description="Extract features from audio samples."
-)
-PARSER.add_argument(
-    "-f", "--folder", type=str, required=True,
-    help="Dir where data lives in folders names after classes."
-)
-PARSER.add_argument(
-    "-feats", "--feature-names",
-    type=lambda s: [item for item in s.split(",")],
-    default=["mfcc", "gfcc", "chroma", "spectral"],
-    help="Features to compute.",
-)
-
-### Functions
+################################################################################
+# Functions
+################################################################################
 
 def get_features(folder_path, feature_names):
     """
@@ -57,9 +47,8 @@ def get_features(folder_path, feature_names):
     features, class_names, file_names, feat_names = aT.extract_features(
         data_dirs,
         1.0, 1.0,
-        aT.shortTermWindow,
-        aT.shortTermStep,
-        False,
+        ST_WIN,
+        ST_STEP,
         feature_names
     )
 
@@ -77,6 +66,22 @@ def get_features(folder_path, feature_names):
 
 
 if __name__ == "__main__":
+    import argparse
+    from pyAudioProcessing.utils import write_to_json
+
+    PARSER = argparse.ArgumentParser(
+        description="Extract features from audio samples."
+    )
+    PARSER.add_argument(
+        "-f", "--folder", type=str, required=True,
+        help="Dir where data lives in folders names after classes."
+    )
+    PARSER.add_argument(
+        "-feats", "--feature-names",
+        type=lambda s: [item for item in s.split(",")],
+        default=["mfcc", "gfcc", "chroma", "spectral"],
+        help="Features to compute.",
+    )
     ARGS = PARSER.parse_args()
     # dict with structure
     # {

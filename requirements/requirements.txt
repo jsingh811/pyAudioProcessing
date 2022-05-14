@@ -7,6 +7,5 @@ scikit-learn==0.24.2
 simplejson==3.16.0
 eyed3==0.9.5
 pydub==0.23.1
-pyAudioAnalysis==0.2.5
 pytest==6.2.3
 ffmpeg==1.4

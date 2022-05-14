@@ -5,13 +5,25 @@ Created on Fri Mar 19 15:27:32 2021
 
 @author: jsingh
 """
-### Imports
+
+################################################################################
+# Imports
+################################################################################
 import json
 import os
 import numpy as np
 from scipy.io import wavfile
 
-### Functions
+################################################################################
+# Globals
+################################################################################
+
+ST_WIN = 0.05
+ST_STEP = 0.05
+
+################################################################################
+# Functions
+################################################################################
 
 def convert_audio_to_mono(signal):
     """
@@ -40,6 +52,7 @@ def write_to_json(file_name, data):
 def read_audio(input_file):
     """
     Reads input audio file and returns sampling frequency along with the signal.
+    # TODO add audio reading for formats other than .wav
     """
     sampling_rate = 0
     signal = np.array([])
@@ -49,10 +62,10 @@ def read_audio(input_file):
             sampling_rate, signal = wavfile.read(input_file)
         else:
             raise ValueError("""
-                File extension not supported.
+                File extension not supported in {}.
                 Please convert your audio to .wav using pyAudioProcessing.convert_audio
                 using convert_files_to_wav method.
-            """)
+            """.format(input_file))
     if signal.ndim == 2 and signal.shape[1] == 1:
         signal = signal.flatten()
 

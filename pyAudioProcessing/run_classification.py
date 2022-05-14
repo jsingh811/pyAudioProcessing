@@ -6,47 +6,17 @@ Created on Thu Jul 13 13:08:51 2019
 @author: jsingh
 """
 ### Imports
-import argparse
 import os
+import warnings
+
 from os import listdir
 from os.path import isfile, join
 
-from pyAudioProcessing.utils import write_to_json
+from pyAudioProcessing.utils import write_to_json, ST_WIN, ST_STEP
 from pyAudioProcessing.trainer import audioTrainTest as aT
 
+warnings.simplefilter("ignore")
 
-### Globals and Variables
-PARSER = argparse.ArgumentParser(
-    description="Run training or testing of audio samples."
-)
-PARSER.add_argument(
-    "-f", "--folder", type=str, required=True,
-    help="Dir where data lives in folders names after classes."
-)
-PARSER.add_argument(
-    "-t", "--task", type=str, required=True, choices=["train", "classify"],
-    help="Train on data of classify data."
-)
-PARSER.add_argument(
-    "-feats", "--feature-names",
-    type=lambda s: [item for item in s.split(",")],
-    default=["mfcc", "gfcc", "chroma", "spectral"],
-    help="Features to compute.",
-)
-PARSER.add_argument(
-    "-clf", "--classifier", type=str, required=True,
-    help="Classifier to use or save.",
-)
-PARSER.add_argument(
-    "-clfname", "--classifier-name", type=str, required=True,
-    help="Name of the classifier to use or save.",
-)
-
-PARSER.add_argument(
-    "-logfile", "--logfile", type=str, required=False,
-    help="Path of file to log results in.",
-    default="classifier_results"
-)
 
 ### Functions
 
@@ -68,11 +38,11 @@ def train_model(data_dirs, feature_names, classifier, classifier_name, use_file_
     aT.featureAndTrain(
         data_dirs,
         1.0, 1.0,
-        aT.shortTermWindow,
-        aT.shortTermStep,
+        ST_WIN,
+        ST_STEP,
         classifier,
         classifier_name,
-        False,
+        #False,
         feats=feature_names,
         use_file_names=use_file_names,
         file_names=file_names
@@ -286,6 +256,40 @@ def classify(feature_names, classifier, classifier_name, logfile=False, folder_p
             file_names=file_names)
 
 if __name__ == "__main__":
+    import argparse
+    ### Globals and Variables
+    PARSER = argparse.ArgumentParser(
+        description="Run training or testing of audio samples."
+    )
+    PARSER.add_argument(
+        "-f", "--folder", type=str, required=True,
+        help="Dir where data lives in folders names after classes."
+    )
+    PARSER.add_argument(
+        "-t", "--task", type=str, required=True, choices=["train", "classify"],
+        help="Train on data of classify data."
+    )
+    PARSER.add_argument(
+        "-feats", "--feature-names",
+        type=lambda s: [item for item in s.split(",")],
+        default=["mfcc", "gfcc", "chroma", "spectral"],
+        help="Features to compute.",
+    )
+    PARSER.add_argument(
+        "-clf", "--classifier", type=str, required=True,
+        help="Classifier to use or save.",
+    )
+    PARSER.add_argument(
+        "-clfname", "--classifier-name", type=str, required=True,
+        help="Name of the classifier to use or save.",
+    )
+
+    PARSER.add_argument(
+        "-logfile", "--logfile", type=str, required=False,
+        help="Path of file to log results in.",
+        default="classifier_results"
+    )
+
     ARGS = PARSER.parse_args()
     train_and_classify(
         ARGS.folder,

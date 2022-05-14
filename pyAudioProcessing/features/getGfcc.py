@@ -60,7 +60,7 @@ class GFCCFeature(object):
             self.fs,
             filters.centre_freqs(self.fs, 64, 50)
         )
-        
+
         return erb_filter_result
 
     def mean_var_norm(self, x, std=True):
@@ -68,10 +68,10 @@ class GFCCFeature(object):
         Returns mean variance normalization.
         """
         norm = x - numpy.mean(x, axis=0)
-        
+
         if std is True:
             norm = norm / numpy.std(norm)
-            
+
         return norm
 
     def get_gfcc(
@@ -96,8 +96,8 @@ class GFCCFeature(object):
         gfcc_feat = numpy.array(
             [numpy.mean(data_list) for data_list in outData]
         ).copy()
-        
+
         if norm is True:
             gfcc_feat = self.mean_var_norm(gfcc_feat)
-        
+
         return gfcc_feat
