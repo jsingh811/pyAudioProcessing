@@ -77,11 +77,13 @@ You can choose between features `mfcc`, `gfcc`, `spectral`, `chroma` or any comb
 
 ### Classifier options   
 
-You can choose between `svm`, `svm_rbf`, `randomforest`, `logisticregression`, `knn`, `gradientboosting` and `extratrees`.  
+You can choose between `svm`, `svm_rbf`, `randomforest`, `logisticregression`, `knn`, `gradientboosting` and `extratrees`.   
 Hyperparameter tuning is included in the code for each using grid search.  
 
 
-## Training and Testing Data structuring  
+## Training and Testing Data structuring  (Optional)
+
+The library works with data structured as per this section or alternatively with taking an input dictionary object specifying location paths of the audio files.
 
 Let's say you have 2 classes that you have training data for (music and speech), and you want to use pyAudioProcessing to train a model using available feature options. Save each class as a directory and all the training audio .wav files under the respective class directories. Example:  
 
@@ -132,20 +134,57 @@ There are three models that have been pre-trained and provided in this project u
 
 `musicVSspeechVSbirds`: Contains SVM classifier that classifying audio into three possible classes - music, speech and birds. This classifier was trained using mfcc, spectral and chroma features.
 
-In order to classify your audio files using any of these classifier, please follow the audio files [structuring guidelines](https://github.com/jsingh811/pyAudioProcessing#training-and-testing-data-structuring). The following commands in Python can be used to classify your data.
+There are two ways to specify the data you want to classify.  
+
+1. Using `file_names` specifying locations of audios as follows.
+
+```
+# {"audios_1" : [<path to audio>, <path to audio>, ...], "audios_2": [<path to audio>, ...],}
+
+# Examples.  
+
+file_names = {
+	"music" : ["/Users/abc/Documents/opera.wav", "/Users/abc/Downloads/song.wav"], 
+	"birds": [ "/Users/abc/Documents/b1.wav", "/Users/abc/Documents/b2.wav", "/Users/abc/Desktop/birdsound.wav"]
+}
+
+file_names = {
+	"audios" : ["/Users/abc/Documents/opera.wav", "/Users/abc/Downloads/song.wav", "/Users/abc/Documents/b1.wav", "/Users/abc/Documents/b2.wav", "/Users/abc/Desktop/birdsound.wav"]
+}
+```  
+
+The following commands in Python can be used to classify your data.
 
 ```
 from pyAudioProcessing.run_classification import classify_ms, classify_msb, classify_genre
 
 # musicVSspeech classification
-results_music_speech = classify_ms("../data")
+results_music_speech = classify_ms(file_names=file_names)
 
 # musicVSspeechVSbirds classification
-results_music_speech_birds = classify_msb("../data")
+results_music_speech_birds = classify_msb(file_names=file_names)
 
 # music genre classification
-results_music_genre = classify_genre("../data")
+results_music_genre = classify_genre(file_names=file_names)
 ```
+
+2. Using data structured as specified in [structuring guidelines](https://github.com/jsingh811/pyAudioProcessing#training-and-testing-data-structuring) and passing the parent folder path as `folder_path` input.  
+
+The following commands in Python can be used to classify your data.
+
+```
+from pyAudioProcessing.run_classification import classify_ms, classify_msb, classify_genre
+
+# musicVSspeech classification
+results_music_speech = classify_ms(folder_path="../data")
+
+# musicVSspeechVSbirds classification
+results_music_speech_birds = classify_msb(folder_path="../data")
+
+# music genre classification
+results_music_genre = classify_genre(folder_path="../data")
+```
+
 
 Sample results look like  
 ```
@@ -157,22 +196,51 @@ Sample results look like
 
 Audio data can be trained, tested and classified using pyAudioProcessing. Please see [feature options](https://github.com/jsingh811/pyAudioProcessing#feature-options) and [classifier model options](https://github.com/jsingh811/pyAudioProcessing#classifier-options) for more information.   
 
-Sample spoken location name dataset for spoken instances of "london" and "boston" can be found [here](https://drive.google.com/drive/folders/1AayPvvgZh4Jvi6LYDR7YS_ar7l3gEtAy?usp=sharing).
 
 ### Examples  
 
 Code example of using `gfcc,spectral,chroma` feature and `svm` classifier. Sample data can be found [here](https://github.com/jsingh811/pyAudioProcessing/tree/master/data_samples). Please refer to the section on [Training and Testing Data structuring](https://github.com/jsingh811/pyAudioProcessing#training-and-testing-data-structuring) to use your own data instead.   
 ```
-from pyAudioProcessing.run_classification import train_and_classify
+from pyAudioProcessing.run_classification import  classify, train
+
 # Training
-train_and_classify("data_samples/training", "train", ["gfcc", "spectral", "chroma"], "svm", "svm_clf")
+train(
+	file_names={
+		"music": [<path to audio>, <path to audio>, ..], 
+		"speech": [<path to audio>, <path to audio>, ..]
+	}, 
+	feature_names=["mfcc", "gfcc", "spectral", "chroma"], 
+	classifier="knn", 
+	classifier_name="svm_test_clf"
+)
+
 ```
+Or, to use a directory containing audios organized as in [structuring guidelines](https://github.com/jsingh811/pyAudioProcessing#training-and-testing-data-structuring), the following can be used
+```
+train(
+	folder_path="../data", # path to dir
+	feature_names=["mfcc", "gfcc", "spectral", "chroma"], 
+	classifier="svm", 
+	classifier_name="svm_test_clf"
+)
+```
+
 The above logs files analyzed, hyperparameter tuning results for recall, precision and F1 score, along with the final confusion matrix.
 
 To classify audio samples with the classifier you created above,
 ```
 # Classify data
-classifications = train_and_classify("data_samples/testing", "classify", ["gfcc", "spectral", "chroma"], "svm", "svm_clf")
+results = classify(
+	file_names={
+		"music": [<path to audio>, <path to audio>, ..], 
+		"speech": [<path to audio>, <path to audio>, ..]
+	}, 
+	feature_names=["mfcc", "gfcc", "spectral", "chroma"], 
+	classifier="svm", 
+	classifier_name="svm_test_clf"
+)
+
+# or you can specify a folder path as described in the training section.
 ```  
 The above logs the filename where the classification results are saved along with the details about testing files and the classifier used if you pass in logfile=True into the function call.
 

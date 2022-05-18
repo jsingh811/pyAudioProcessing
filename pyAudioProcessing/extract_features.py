@@ -22,7 +22,7 @@ from pyAudioProcessing.trainer import audioTrainTest as aT
 # Functions
 ################################################################################
 
-def get_features(folder_path, feature_names):
+def get_features(folder_path=None, feature_names=["mfcc", "gfcc"], file_names={}):
     """
     Extracts features specified in feature_names for every folder inside folder_path.
     Returns a dict of the format
@@ -33,8 +33,14 @@ def get_features(folder_path, feature_names):
             },
         .. },
     ..}
+    # TODO make work with input file_names instead of folder_path
     """
-    data_dirs = [x[0] for x in os.walk(folder_path)][1:]
+    use_file_names = False
+    if folder_path:
+        data_dirs = [x[0] for x in os.walk(folder_path)][1:]
+    if file_names and len(file_names) > 0:
+        data_dirs = None
+        use_file_names = True
     feature_names = [feat.lower().strip() for feat in feature_names]
     print("""
         \n Extracting features {} \n
