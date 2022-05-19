@@ -25,6 +25,7 @@ ST_STEP = 0.05
 # Functions
 ################################################################################
 
+
 def convert_audio_to_mono(signal):
     """
     Some audios contain a 2 dim array like
@@ -41,13 +42,15 @@ def convert_audio_to_mono(signal):
 
     return signal
 
+
 def write_to_json(file_name, data):
     """
     Write data to file_name.
     """
-    with open(file_name, 'w') as outfile:
+    with open(file_name, "w") as outfile:
         json.dump(data, outfile, indent=1)
     print("\nResults saved in {}\n".format(file_name))
+
 
 def read_audio(input_file):
     """
@@ -58,14 +61,18 @@ def read_audio(input_file):
     signal = np.array([])
     if isinstance(input_file, str):
         extension = os.path.splitext(input_file)[1].lower()
-        if extension == '.wav':
+        if extension == ".wav":
             sampling_rate, signal = wavfile.read(input_file)
         else:
-            raise ValueError("""
+            raise ValueError(
+                """
                 File extension not supported in {}.
                 Please convert your audio to .wav using pyAudioProcessing.convert_audio
                 using convert_files_to_wav method.
-            """.format(input_file))
+            """.format(
+                    input_file
+                )
+            )
     if signal.ndim == 2 and signal.shape[1] == 1:
         signal = signal.flatten()
 

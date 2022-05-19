@@ -17,8 +17,9 @@ LEN = 13
 # Functions
 ################################################################################
 
+
 def triangular_filter_bank(
-    fs, nfft, lowfreq=133.33, linc=200/3, logsc=1.0711703, lin_filt=LEN, log_filt=27
+    fs, nfft, lowfreq=133.33, linc=200 / 3, logsc=1.0711703, lin_filt=LEN, log_filt=27
 ):
     """
     Triangular filterbank for MFCC computation
@@ -30,29 +31,33 @@ def triangular_filter_bank(
     # start, mid and end points of the filters is spectral domain
     freqs = np.zeros(num_filts + 2)
     freqs[0:lin_filt] = lowfreq + np.arange(lin_filt) * linc
-    freqs[lin_filt:] = freqs[lin_filt-1] * logsc ** np.arange(1, log_filt+3)
-    denom = (freqs[2:] - freqs[0:-2])
-    heights = 2. / denom
+    freqs[lin_filt:] = freqs[lin_filt - 1] * logsc ** np.arange(1, log_filt + 3)
+    denom = freqs[2:] - freqs[0:-2]
+    heights = 2.0 / denom
 
     # filterbank coeff (fft bins Hz)
     fbank = np.zeros((num_filts, nfft))
-    nfreqs = np.arange(nfft) / (1. * nfft) * fs
+    nfreqs = np.arange(nfft) / (1.0 * nfft) * fs
 
     for i in range(num_filts):
         low_freqs = freqs[i]
         cent_freqs = freqs[i + 1]
         high_freqs = freqs[i + 2]
 
-        lid = np.arange(np.floor(freqs[i] * nfft / fs) + 1,
-                        np.floor(freqs[i+1] * nfft / fs) + 1,
-                        dtype=int)
+        lid = np.arange(
+            np.floor(freqs[i] * nfft / fs) + 1,
+            np.floor(freqs[i + 1] * nfft / fs) + 1,
+            dtype=int,
+        )
         lslope = heights[i] / (freqs[i + 1] - freqs[i])
-        rid = np.arange(np.floor(freqs[i+1] * nfft / fs) + 1,
-                        np.floor(high_freqs * nfft / fs) + 1,
-                        dtype=int)
-        rslope = heights[i] / (freqs[i+2] - freqs[i+1])
+        rid = np.arange(
+            np.floor(freqs[i + 1] * nfft / fs) + 1,
+            np.floor(high_freqs * nfft / fs) + 1,
+            dtype=int,
+        )
+        rslope = heights[i] / (freqs[i + 2] - freqs[i + 1])
         fbank[i][lid] = lslope * (nfreqs[lid] - freqs[i])
-        fbank[i][rid] = rslope * (freqs[i+2] - nfreqs[rid])
+        fbank[i][rid] = rslope * (freqs[i + 2] - nfreqs[rid])
 
     return fbank, freqs
 
@@ -63,9 +68,10 @@ def compute_mfcc(fft_magnitude, fbank, num_mfcc_feats):
     MFCC calculation is, in general, taken from the scikits.talkbox library (MIT Licence).
     """
     mspec = np.log10(np.dot(fft_magnitude, fbank.T) + 0.00000001)
-    ceps = dct(mspec, type=2, norm='ortho', axis=-1)[:num_mfcc_feats]
+    ceps = dct(mspec, type=2, norm="ortho", axis=-1)[:num_mfcc_feats]
 
     return ceps
+
 
 def get_mfcc(fs, nfft, n_mfcc_feats, signal):
     """

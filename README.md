@@ -27,7 +27,7 @@ You can also get the requirements by running
 
 ```
 pip install -r requirements/requirements.txt
-``` 
+```
 
 
 ## Contents  
@@ -144,7 +144,7 @@ There are two ways to specify the data you want to classify.
 # Examples.  
 
 file_names = {
-	"music" : ["/Users/abc/Documents/opera.wav", "/Users/abc/Downloads/song.wav"], 
+	"music" : ["/Users/abc/Documents/opera.wav", "/Users/abc/Downloads/song.wav"],
 	"birds": [ "/Users/abc/Documents/b1.wav", "/Users/abc/Documents/b2.wav", "/Users/abc/Desktop/birdsound.wav"]
 }
 
@@ -191,11 +191,11 @@ Sample results look like
 {'../data/music': {'beatles.wav': {'probabilities': [0.8899067858599712, 0.011922234412695229, 0.0981709797273336], 'classes': ['music', 'speech', 'birds']}, ...}
 ```
 
-
 ## Training and Classifying Audio files  
 
 Audio data can be trained, tested and classified using pyAudioProcessing. Please see [feature options](https://github.com/jsingh811/pyAudioProcessing#feature-options) and [classifier model options](https://github.com/jsingh811/pyAudioProcessing#classifier-options) for more information.   
 
+Sample spoken location name dataset for spoken instances of "london" and "boston" can be found [here](https://drive.google.com/drive/folders/1AayPvvgZh4Jvi6LYDR7YS_ar7l3gEtAy?usp=sharing).
 
 ### Examples  
 
@@ -206,11 +206,11 @@ from pyAudioProcessing.run_classification import  classify, train
 # Training
 train(
 	file_names={
-		"music": [<path to audio>, <path to audio>, ..], 
+		"music": [<path to audio>, <path to audio>, ..],
 		"speech": [<path to audio>, <path to audio>, ..]
-	}, 
-	feature_names=["mfcc", "gfcc", "spectral", "chroma"], 
-	classifier="knn", 
+	},
+	feature_names=["mfcc", "gfcc", "spectral", "chroma"],
+	classifier="knn",
 	classifier_name="svm_test_clf"
 )
 
@@ -219,8 +219,8 @@ Or, to use a directory containing audios organized as in [structuring guidelines
 ```
 train(
 	folder_path="../data", # path to dir
-	feature_names=["mfcc", "gfcc", "spectral", "chroma"], 
-	classifier="svm", 
+	feature_names=["mfcc", "gfcc", "spectral", "chroma"],
+	classifier="svm",
 	classifier_name="svm_test_clf"
 )
 ```
@@ -232,11 +232,11 @@ To classify audio samples with the classifier you created above,
 # Classify data
 results = classify(
 	file_names={
-		"music": [<path to audio>, <path to audio>, ..], 
+		"music": [<path to audio>, <path to audio>, ..],
 		"speech": [<path to audio>, <path to audio>, ..]
-	}, 
-	feature_names=["mfcc", "gfcc", "spectral", "chroma"], 
-	classifier="svm", 
+	},
+	feature_names=["mfcc", "gfcc", "spectral", "chroma"],
+	classifier="svm",
 	classifier_name="svm_test_clf"
 )
 

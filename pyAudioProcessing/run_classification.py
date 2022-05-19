@@ -20,44 +20,59 @@ warnings.simplefilter("ignore")
 
 ### Functions
 
-def train_model(data_dirs, feature_names, classifier, classifier_name, use_file_names=False, file_names={}):
+
+def train_model(
+    data_dirs,
+    feature_names,
+    classifier,
+    classifier_name,
+    use_file_names=False,
+    file_names={},
+):
     """
     Train classifier using data in data_dirs
     by extracting features specified by feature_names
     and saving the classifier as name specified by classifier_name.
     """
-    feature_names = [
-        feat.lower().strip()
-        for feat in feature_names
-    ]
-    print("""
+    feature_names = [feat.lower().strip() for feat in feature_names]
+    print(
+        """
         \n Training using features {} with classifier {} that will be saved as {}\n
         """.format(
-            ", ".join(feature_names), classifier, classifier_name)
+            ", ".join(feature_names), classifier, classifier_name
+        )
     )
     aT.featureAndTrain(
         data_dirs,
-        1.0, 1.0,
+        1.0,
+        1.0,
         ST_WIN,
         ST_STEP,
         classifier,
         classifier_name,
-        #False,
+        # False,
         feats=feature_names,
         use_file_names=use_file_names,
-        file_names=file_names
+        file_names=file_names,
     )
 
-def classify_data(data_dirs, feature_names, classifier, classifier_name, verbose=True, logfile=False, use_file_names=False, file_names={}):
+
+def classify_data(
+    data_dirs,
+    feature_names,
+    classifier,
+    classifier_name,
+    verbose=True,
+    logfile=False,
+    use_file_names=False,
+    file_names={},
+):
     """
     Classify data in data_dirs
     by extracting features specified by feature_names
     and using the classifier saved by the name specified by classifier_name.
     """
-    feature_names = [
-        feat.lower().strip()
-        for feat in feature_names
-    ]
+    feature_names = [feat.lower().strip() for feat in feature_names]
     if verbose:
         print(
             """\n Classifying using features {} with classifier {} that is saved as {}\n
@@ -77,16 +92,10 @@ def classify_data(data_dirs, feature_names, classifier, classifier_name, verbose
             print("\n", fol)
         results[fol] = {}
         if use_file_names:
-            all_files = [
-                f
-                for f in master_fol[fol]
-                if isfile(f) and f.endswith(".wav")
-            ]
+            all_files = [f for f in master_fol[fol] if isfile(f) and f.endswith(".wav")]
         else:
             all_files = [
-                f
-                for f in listdir(fol)
-                if isfile(join(fol, f)) and f.endswith(".wav")
+                f for f in listdir(fol) if isfile(join(fol, f)) and f.endswith(".wav")
             ]
         correctly_classified = 0
         num_files = len(all_files)
@@ -96,15 +105,9 @@ def classify_data(data_dirs, feature_names, classifier, classifier_name, verbose
             else:
                 p = join(fol, f)
             res = aT.fileClassification(
-                p,
-                classifier_name,
-                classifier,
-                feats=feature_names
+                p, classifier_name, classifier, feats=feature_names
             )
-            results[fol][f] = {
-                "probabilities": list(res[1]),
-                "classes": list(res[2])
-            }
+            results[fol][f] = {"probabilities": list(res[1]), "classes": list(res[2])}
             indx = list(res[1]).index(max(res[1]))
             if res[2][indx] == fol.split("/")[-1]:
                 correctly_classified += 1
@@ -118,11 +121,9 @@ def classify_data(data_dirs, feature_names, classifier, classifier_name, verbose
             )
 
     if logfile:
-        write_to_json(
-            logfile+"_"+classifier_name.split("/")[-1]+'.json',
-            results
-        )
+        write_to_json(logfile + "_" + classifier_name.split("/")[-1] + ".json", results)
     return results
+
 
 def train_and_classify(
     folder_path,
@@ -132,7 +133,7 @@ def train_and_classify(
     classifier_name,
     logfile=False,
     use_file_names=False,
-    file_names={}
+    file_names={},
 ):
     """
     Train on the data under folder_path or classify the data in folder path
@@ -147,19 +148,30 @@ def train_and_classify(
             )
         )
     else:
-        data_dirs=None
+        data_dirs = None
     if task == "train":
-        train_model(data_dirs, feature_names, classifier, classifier_name, use_file_names=use_file_names, file_names=file_names)
+        train_model(
+            data_dirs,
+            feature_names,
+            classifier,
+            classifier_name,
+            use_file_names=use_file_names,
+            file_names=file_names,
+        )
     elif task == "classify":
-        results = classify_data(data_dirs, feature_names, classifier, classifier_name, logfile=logfile, use_file_names=use_file_names, file_names=file_names)
+        results = classify_data(
+            data_dirs,
+            feature_names,
+            classifier,
+            classifier_name,
+            logfile=logfile,
+            use_file_names=use_file_names,
+            file_names=file_names,
+        )
         return results
 
 
-def classify_pretrained(
-    classifier_name,
-    folder_path=None,
-    file_names={}
-):
+def classify_pretrained(classifier_name, folder_path=None, file_names={}):
     """
     Train on the data under folder_path or classify the data in folder path
     using features specified by feature_names and the specified classifier.
@@ -190,25 +202,43 @@ def classify_pretrained(
         classifier_name = "models/speechVSmusicVSbirds/svm_clf"
         classifier = "svm"
     else:
-        raise("Classifier does not exist")
+        raise ("Classifier does not exist")
     return classify_data(
-        data_dirs, feature_names, classifier, classifier_name,
-        verbose=False, use_file_names=use_file_names, file_names=file_names
+        data_dirs,
+        feature_names,
+        classifier,
+        classifier_name,
+        verbose=False,
+        use_file_names=use_file_names,
+        file_names=file_names,
     )
 
 
 def classify_ms(folder_path=None, file_names=None):
-    return classify_pretrained("speechVSmusic", folder_path=folder_path, file_names=file_names)
+    return classify_pretrained(
+        "speechVSmusic", folder_path=folder_path, file_names=file_names
+    )
 
 
 def classify_msb(folder_path=None, file_names=None):
-    return classify_pretrained("speechVSmusicVSbirds", folder_path=folder_path, file_names=file_names)
+    return classify_pretrained(
+        "speechVSmusicVSbirds", folder_path=folder_path, file_names=file_names
+    )
 
 
 def classify_genre(folder_path=None, file_names=None):
-    return classify_pretrained("music genre", folder_path=folder_path, file_names=file_names)
+    return classify_pretrained(
+        "music genre", folder_path=folder_path, file_names=file_names
+    )
 
-def train(folder_path=None, file_names=None, feature_names=["mfcc"], classifier="svm", classifier_name="svm_clf"):
+
+def train(
+    folder_path=None,
+    file_names=None,
+    feature_names=["mfcc"],
+    classifier="svm",
+    classifier_name="svm_clf",
+):
     """
     Pass in either a path to the folder containing audio files in sub-folders
     as specified in the directory structure document; or pass in a dictionary
@@ -234,7 +264,8 @@ def train(folder_path=None, file_names=None, feature_names=["mfcc"], classifier=
             classifier_name,
             logfile=False,
             use_file_names=False,
-            file_names={})
+            file_names={},
+        )
     if file_names:
         train_and_classify(
             None,
@@ -244,7 +275,8 @@ def train(folder_path=None, file_names=None, feature_names=["mfcc"], classifier=
             classifier_name,
             logfile=False,
             use_file_names=True,
-            file_names=file_names)
+            file_names=file_names,
+        )
 
 
 def classify(
@@ -253,7 +285,7 @@ def classify(
     feature_names=["mfcc"],
     classifier="svm",
     classifier_name="svm_clf",
-    logfile=False
+    logfile=False,
 ):
     """
     Pass in either a path to the folder containing audio files in sub-folders
@@ -280,7 +312,8 @@ def classify(
             classifier_name,
             logfile=logfile,
             use_file_names=False,
-            file_names={})
+            file_names={},
+        )
     if file_names:
         return train_and_classify(
             None,
@@ -290,41 +323,61 @@ def classify(
             classifier_name,
             logfile=logfile,
             use_file_names=True,
-            file_names=file_names)
+            file_names=file_names,
+        )
+
 
 if __name__ == "__main__":
     import argparse
+
     ### Globals and Variables
     PARSER = argparse.ArgumentParser(
         description="Run training or testing of audio samples."
     )
     PARSER.add_argument(
-        "-f", "--folder", type=str, required=True,
-        help="Dir where data lives in folders names after classes."
+        "-f",
+        "--folder",
+        type=str,
+        required=True,
+        help="Dir where data lives in folders names after classes.",
     )
     PARSER.add_argument(
-        "-t", "--task", type=str, required=True, choices=["train", "classify"],
-        help="Train on data of classify data."
+        "-t",
+        "--task",
+        type=str,
+        required=True,
+        choices=["train", "classify"],
+        help="Train on data of classify data.",
     )
     PARSER.add_argument(
-        "-feats", "--feature-names",
+        "-feats",
+        "--feature-names",
         type=lambda s: [item for item in s.split(",")],
         default=["mfcc", "gfcc", "chroma", "spectral"],
         help="Features to compute.",
     )
     PARSER.add_argument(
-        "-clf", "--classifier", type=str, required=True,
+        "-clf",
+        "--classifier",
+        type=str,
+        required=True,
         help="Classifier to use or save.",
     )
     PARSER.add_argument(
-        "-clfname", "--classifier-name", type=str, required=True,
+        "-clfname",
+        "--classifier-name",
+        type=str,
+        required=True,
         help="Name of the classifier to use or save.",
     )
 
     PARSER.add_argument(
-        "-logfile", "--logfile", type=str, required=False,
+        "-logfile",
+        "--logfile",
+        type=str,
+        required=False,
         help="Path of file to log results in.",
-        default="classifier_results"
+        default="classifier_results",
     )
 
     ARGS = PARSER.parse_args()
@@ -334,5 +387,5 @@ if __name__ == "__main__":
         ARGS.feature_names,
         ARGS.classifier,
         ARGS.classifier_name,
-        ARGS.logfile
+        ARGS.logfile,
     )

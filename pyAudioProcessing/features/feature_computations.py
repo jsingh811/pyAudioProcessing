@@ -25,6 +25,7 @@ from pyAudioProcessing.utils import convert_audio_to_mono, read_audio
 # Classes
 ################################################################################
 
+
 def extract_st_features(signal, fs, win, step, feats):
     """
     Windows the signal and get features for each window in time and freq domain.
@@ -39,19 +40,15 @@ def extract_st_features(signal, fs, win, step, feats):
     st_features = []
     feature_names = []
     for pos in range(0, sig_len + 1 - win, step):
-        window_signal = signal[pos: pos + win]
-        freq_domain_signal = (abs(fft(window_signal))[0: int(win/2)]) / int(win/2)
+        window_signal = signal[pos : pos + win]
+        freq_domain_signal = (abs(fft(window_signal))[0 : int(win / 2)]) / int(win / 2)
         win_features = np.array([])
         if "spectral" in feats:
             if len(win_features) == 0:
-                win_features = np.array(
-                    [[spectral.zero_crossing_rate(window_signal)]]
-                )
+                win_features = np.array([[spectral.zero_crossing_rate(window_signal)]])
             else:
                 win_features = np.append(
-                    win_features,
-                    [[spectral.zero_crossing_rate(window_signal)]],
-                    axis=0
+                    win_features, [[spectral.zero_crossing_rate(window_signal)]], axis=0
                 )
             win_features = np.append(
                 win_features, [[spectral.energy(window_signal)]], axis=0
@@ -69,23 +66,30 @@ def extract_st_features(signal, fs, win, step, feats):
             win_features = np.append(
                 win_features,
                 [[spectral.flux(freq_domain_signal, freq_domain_signal_prev)]],
-                axis=0
+                axis=0,
             )
             win_features = np.append(
-                win_features,
-                [[spectral.roll_off(freq_domain_signal, fs)]],
-                axis=0
+                win_features, [[spectral.roll_off(freq_domain_signal, fs)]], axis=0
             )
             if pos == 0:
                 feature_names += [
-                    "zcr", "energy", "energy_entropy", "spectral_centroid",
-                    "spectral_spread", "spectral_entropy", "spectral_flux",
-                    "spectral_rolloff"
+                    "zcr",
+                    "energy",
+                    "energy_entropy",
+                    "spectral_centroid",
+                    "spectral_spread",
+                    "spectral_entropy",
+                    "spectral_flux",
+                    "spectral_rolloff",
                 ]
         if "mfcc" in feats:
             mfcc_feat = np.array(
-                [[i] for i in mfcc.get_mfcc(
-                    fs, int(win/2), 13, freq_domain_signal).copy()]
+                [
+                    [i]
+                    for i in mfcc.get_mfcc(
+                        fs, int(win / 2), 13, freq_domain_signal
+                    ).copy()
+                ]
             )
             if len(win_features) == 0:
                 win_features = mfcc_feat
@@ -93,14 +97,18 @@ def extract_st_features(signal, fs, win, step, feats):
                 win_features = np.append(
                     win_features,
                     np.array(
-                        [[i] for i in mfcc.get_mfcc(
-                            fs, int(win/2), 13, freq_domain_signal).copy()]
-                    ), axis=0
+                        [
+                            [i]
+                            for i in mfcc.get_mfcc(
+                                fs, int(win / 2), 13, freq_domain_signal
+                            ).copy()
+                        ]
+                    ),
+                    axis=0,
                 )
             if pos == 0:
                 feature_names += [
-                    "mfcc_{0:d}".format(mfcc_i)
-                    for mfcc_i in range(1, 13+1)
+                    "mfcc_{0:d}".format(mfcc_i) for mfcc_i in range(1, 13 + 1)
                 ]
         if "gfcc" in feats:
             gfcc_feat = np.array(
@@ -113,7 +121,7 @@ def extract_st_features(signal, fs, win, step, feats):
             if pos == 0:
                 feature_names += [
                     "gfcc_{0:d}".format(gfcc_i)
-                    for gfcc_i in range(1, len(gfcc_feat)+1)
+                    for gfcc_i in range(1, len(gfcc_feat) + 1)
                 ]
         if "chroma" in feats:
             chroma = spectral.chroma(freq_domain_signal, fs)
@@ -125,7 +133,7 @@ def extract_st_features(signal, fs, win, step, feats):
             if pos == 0:
                 feature_names += [
                     "chroma_{0:d}".format(chroma_i)
-                    for chroma_i in range(1, len(chroma)+1)
+                    for chroma_i in range(1, len(chroma) + 1)
                 ]
                 feature_names.append("chroma_std")
         st_features.append(win_features)
@@ -136,6 +144,7 @@ def extract_st_features(signal, fs, win, step, feats):
     st_features = st_features.reshape(shape[0], shape[1])
     st_features = st_features.T
     return st_features, feature_names
+
 
 def extract_agg_features(signal, fs, mt_win, mt_step, st_win, st_step, feats):
     """
@@ -151,17 +160,15 @@ def extract_agg_features(signal, fs, mt_win, mt_step, st_win, st_step, feats):
 
     feat_names = [
         "_".join([feature_names[feat_num], "mean"]) for feat_num in range(num_feats)
-    ] + [
-        "_".join([feature_names[feat_num], "std"]) for feat_num in range(num_feats)
-    ]
+    ] + ["_".join([feature_names[feat_num], "std"]) for feat_num in range(num_feats)]
 
     for i in range(num_feats):
         feat_len = len(st_features[i])
         inx = 0
-        while (inx < feat_len):
+        while inx < feat_len:
             pos1 = inx
             pos2 = inx + int(round(mt_win / st_step))
-            pos2 = min(pos2, feat_len) # capping max
+            pos2 = min(pos2, feat_len)  # capping max
             st = st_features[i][pos1:pos2]
             # append mean and std
             agg_features[i].append(np.mean(st))
@@ -170,13 +177,9 @@ def extract_agg_features(signal, fs, mt_win, mt_step, st_win, st_step, feats):
             inx += int(round(mt_step / st_step))
     return np.array(agg_features), st_features, feat_names
 
+
 def extract_features_from_audio_locations(
-    wav_file_list,
-    mt_win,
-    mt_step,
-    st_win,
-    st_step,
-    feats
+    wav_file_list, mt_win, mt_step, st_win, st_step, feats
 ):
     """
     Extracts averaged / mid-term features from audio paths in wav_file_list.
@@ -197,18 +200,19 @@ def extract_features_from_audio_locations(
             continue
         wav_file_list2.append(file)
         [mt_term_feats, _, mt_feature_names] = extract_agg_features(
-            x, fs,
-            round(mt_win * fs), round(mt_step * fs),
-            round(fs * st_win), round(fs * st_step),
-            feats
+            x,
+            fs,
+            round(mt_win * fs),
+            round(mt_step * fs),
+            round(fs * st_win),
+            round(fs * st_step),
+            feats,
         )
 
         mt_term_feats = np.transpose(mt_term_feats)
         mt_term_feats = mt_term_feats.mean(axis=0)
         # long term averaging of the mid-term feature statistics
-        if (
-            not np.isnan(mt_term_feats).any()
-        ) and (not np.isinf(mt_term_feats).any()):
+        if (not np.isnan(mt_term_feats).any()) and (not np.isinf(mt_term_feats).any()):
             if len(agged_features) == 0:
                 agged_features = mt_term_feats
             else:
@@ -225,7 +229,7 @@ def extract_features_from_audios(
     st_step,
     feats=["mfcc", "gfcc"],
     use_file_names=False,
-    file_names={}
+    file_names={},
 ):
     """
     Extract audio features from either sub-folders in parent folder specified by
@@ -245,43 +249,33 @@ def extract_features_from_audios(
                     wav_file_list.append(file)
             wav_file_list = sorted(wav_file_list)
             [f, fn, feature_names] = extract_features_from_audio_locations(
-                wav_file_list,
-                mt_win,
-                mt_step,
-                st_win,
-                st_step,
-                feats
+                wav_file_list, mt_win, mt_step, st_win, st_step, feats
             )
             if f.shape[0] > 0:
-                 # at least 1 valid audio file has been found
-                 features.append(f)
-                 filepaths.append(fn)
-                 feature_labels.append(feature_names)
-                 if d[-1] == os.sep:
-                     labels.append(d.split(os.sep)[-2])
-                 else:
-                     labels.append(d.split(os.sep)[-1])
+                # at least 1 valid audio file has been found
+                features.append(f)
+                filepaths.append(fn)
+                feature_labels.append(feature_names)
+                if d[-1] == os.sep:
+                    labels.append(d.split(os.sep)[-2])
+                else:
+                    labels.append(d.split(os.sep)[-1])
     else:
         for i, d in enumerate(dirpath):
             wav_file_list = []
-            for ext in ['*.wav']:#'*.aif',  '*.aiff', '*.mp3', '*.au', '*.ogg'
+            for ext in ["*.wav"]:  #'*.aif',  '*.aiff', '*.mp3', '*.au', '*.ogg'
                 wav_file_list.extend(glob.glob(os.path.join(d, ext)))
             wav_file_list = sorted(wav_file_list)
-            [f, fn, feature_names] =  extract_features_from_audio_locations(
-                wav_file_list,
-                mt_win,
-                mt_step,
-                st_win,
-                st_step,
-                feats
+            [f, fn, feature_names] = extract_features_from_audio_locations(
+                wav_file_list, mt_win, mt_step, st_win, st_step, feats
             )
             if f.shape[0] > 0:
-                 # at least 1 valid audio file has been found
-                 features.append(f)
-                 filepaths.append(fn)
-                 feature_labels.append(feature_names)
-                 if d[-1] == os.sep:
-                     labels.append(d.split(os.sep)[-2])
-                 else:
-                     labels.append(d.split(os.sep)[-1])
+                # at least 1 valid audio file has been found
+                features.append(f)
+                filepaths.append(fn)
+                feature_labels.append(feature_names)
+                if d[-1] == os.sep:
+                    labels.append(d.split(os.sep)[-2])
+                else:
+                    labels.append(d.split(os.sep)[-1])
     return features, labels, filepaths, feature_labels
