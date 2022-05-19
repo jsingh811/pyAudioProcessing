@@ -6,9 +6,9 @@ Created on Fri Mar 19 15:55:23 2021
 @author: jsingh
 """
 
-################################################################################
+###############################################################################
 # Imports
-################################################################################
+###############################################################################
 
 import os
 
@@ -16,14 +16,33 @@ from pyAudioProcessing.utils import ST_WIN, ST_STEP
 from pyAudioProcessing.trainer import audioTrainTest as aT
 
 
-################################################################################
+###############################################################################
 # Functions
-################################################################################
+###############################################################################
 
 
-def get_features(folder_path=None, feature_names=["mfcc", "gfcc"], file_names={}):
+def get_features(
+        folder_path=None, 
+        feature_names=["mfcc", "gfcc"], 
+        file_names={}, 
+        file=None
+):
     """
-    Extracts features specified in feature_names for every folder inside folder_path.
+    Extracts features specified in feature_names for 
+    1. audios in every folder inside `folder_path`, OR
+    2. audios in every path specified by `file_names`
+        {
+            "music": [<path to audio 1>, <path of audio 2>, ... ],
+            ...
+        }
+    3. a single audio file path specified by `file`
+    
+    Inputs:
+        folder_path
+        file_names
+        file
+        feature_names:
+            Choose from gfcc, mfcc, spectral, chroma
     Returns a dict of the format
     {
         <every folder name inside folder_path>: {
@@ -32,7 +51,6 @@ def get_features(folder_path=None, feature_names=["mfcc", "gfcc"], file_names={}
             },
         .. },
     ..}
-    # TODO make work with input file_names instead of folder_path
     """
     use_file_names = False
     if folder_path:
@@ -40,6 +58,10 @@ def get_features(folder_path=None, feature_names=["mfcc", "gfcc"], file_names={}
     if file_names and len(file_names) > 0:
         data_dirs = None
         use_file_names = True
+    if file:
+        data_dirs = None
+        use_file_names = True
+        file_names = {"audio": [file]}
     feature_names = [feat.lower().strip() for feat in feature_names]
     print(
         """
@@ -98,5 +120,8 @@ if __name__ == "__main__":
     #       <file name> :{
     #           "features": list, "feature_names": list
     #       }, .. }, ..}
-    file_features = get_features(ARGS.folder, ARGS.feature_names)
+    file_features = get_features(
+        folder_path=ARGS.folder,
+        feature_names=ARGS.feature_names
+    )
     write_to_json("audio_features.json", file_features)

@@ -4,8 +4,5 @@ numpy==1.19.5;python_version<"3.7"
 matplotlib==3.3.4
 scipy==1.5.4
 scikit-learn==0.24.2
-simplejson==3.16.0
-eyed3==0.9.5
 pydub==0.23.1
 pytest==6.2.3
-ffmpeg==1.4

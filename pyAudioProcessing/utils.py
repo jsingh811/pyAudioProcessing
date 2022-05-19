@@ -13,6 +13,7 @@ import json
 import os
 import numpy as np
 from scipy.io import wavfile
+from pydub import AudioSegment
 
 ################################################################################
 # Globals
@@ -55,7 +56,6 @@ def write_to_json(file_name, data):
 def read_audio(input_file):
     """
     Reads input audio file and returns sampling frequency along with the signal.
-    # TODO add audio reading for formats other than .wav
     """
     sampling_rate = 0
     signal = np.array([])
@@ -64,15 +64,27 @@ def read_audio(input_file):
         if extension == ".wav":
             sampling_rate, signal = wavfile.read(input_file)
         else:
-            raise ValueError(
-                """
-                File extension not supported in {}.
-                Please convert your audio to .wav using pyAudioProcessing.convert_audio
-                using convert_files_to_wav method.
-            """.format(
-                    input_file
+            try:
+                audio = AudioSegment.from_file(input_file)
+                sampling_rate = audio.frame_rate
+                if audio.sample_width == 2:                
+                    data = np.fromstring(audio._data, np.int16)
+                elif audio.sample_width == 4:
+                    data = np.fromstring(audio._data, np.int32)
+                signal = []
+                for ch in list(range(audio.channels)):
+                    signal.append(data[ch::audio.channels])
+                signal = np.array(signal).T
+            except Exception as e:
+                raise ValueError(
+                    """
+                    File extension not supported in {}.
+                    Please convert your audio to .wav using pyAudioProcessing.convert_audio
+                    using convert_files_to_wav method. Error {}
+                    """.format(
+                        input_file, e
+                    )
                 )
-            )
     if signal.ndim == 2 and signal.shape[1] == 1:
         signal = signal.flatten()
 
