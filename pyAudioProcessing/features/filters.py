@@ -19,7 +19,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
 import numpy as np
-import scipy as sp
 from scipy import signal as sgn
 
 DEFAULT_FILTER_NUM = 100

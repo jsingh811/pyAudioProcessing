@@ -6,11 +6,8 @@ This script derives some of the functions from https://github.com/tyiannak/pyAud
 import sys
 import numpy
 import os
-import glob
 import pickle as cPickle
 import signal
-import csv
-import ntpath
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
@@ -72,7 +69,7 @@ def listOfFeatures2Matrix(features):
 def load_model_knn(kNNModelName, is_regression=False):
     try:
         fo = open(kNNModelName, "rb")
-    except IOerror:
+    except Exception:
         print("didn't find file")
         return
     try:
@@ -113,7 +110,7 @@ def load_model(model_name, is_regression=False):
     '''
     try:
         fo = open(model_name + "MEANS", "rb")
-    except IOerror:
+    except Exception:
             print("Load SVM model: Didn't find file")
             return
     try:
@@ -518,8 +515,16 @@ def format_features(features):
     formatted_features = []
     for f in features:
         fTemp = []
-        for i in range(f.shape[0]):
-            temp = f[i,:]
+        l = f.shape
+        if len(l) == 1:
+            shape = 1
+        else:
+            shape=l[0]
+        for i in range(shape):
+            if len(l) == 1:
+                temp = f
+            else:
+                temp = f[i,:]
             if (not numpy.isnan(temp).any()) and (not numpy.isinf(temp).any()):
                 fTemp.append(temp.tolist())
             else:
@@ -570,9 +575,7 @@ def featureAndTrain(list_of_dirs, mt_win, mt_step, st_win, st_step,
         return
 
     n_feats = features[0].shape[1]
-    feature_names = ["features" + str(d + 1) for d in range(n_feats)]
 
-    #writeTrainDataToARFF(model_name, features, classNames, feature_names)
 
     for i, f in enumerate(features):
         if len(f) == 0:
@@ -602,7 +605,6 @@ def featureAndTrain(list_of_dirs, mt_win, mt_step, st_win, st_step,
 
     print("Selected params: {0:.5f}".format(bestParam))
 
-    C = len(classNames)
     [features_norm, MEAN, STD] = normalizeFeatures(features) # normalize features
     MEAN = MEAN.tolist()
     STD = STD.tolist()

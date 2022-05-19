@@ -13,8 +13,6 @@ import os
 import glob
 import numpy as np
 from scipy.fftpack import fft
-from scipy.fftpack.realtransforms import dct
-from scipy.io import wavfile
 
 from pyAudioProcessing.features import getGfcc
 from pyAudioProcessing.features import mfcc
@@ -36,7 +34,6 @@ def extract_st_features(signal, fs, win, step, feats):
     signal = (signal - signal.mean()) / (sig_max + 0.0000000001)
 
     sig_len = len(signal)
-    nfft = int(win / 2)
     st_features = []
     feature_names = []
     for pos in range(0, sig_len + 1 - win, step):

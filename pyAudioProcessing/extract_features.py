@@ -11,8 +11,6 @@ Created on Fri Mar 19 15:55:23 2021
 ################################################################################
 
 import os
-from os import listdir
-from os.path import isfile, join
 
 from pyAudioProcessing.utils import ST_WIN, ST_STEP
 from pyAudioProcessing.trainer import audioTrainTest as aT
@@ -51,7 +49,14 @@ def get_features(folder_path=None, feature_names=["mfcc", "gfcc"], file_names={}
         )
     )
     features, class_names, file_names, feat_names = aT.extract_features(
-        data_dirs, 1.0, 1.0, ST_WIN, ST_STEP, feature_names
+        data_dirs,
+        1.0,
+        1.0,
+        ST_WIN,
+        ST_STEP,
+        feature_names,
+        use_file_names=use_file_names,
+        file_names=file_names,
     )
 
     class_file_feats = {}

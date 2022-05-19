@@ -6,7 +6,6 @@ Created on Thu Jun 10 15:23:55 2021
 @author: jsingh
 """
 # Imports
-import os
 import numpy as np
 from scipy.io import wavfile
 from pyAudioProcessing.utils import read_audio, convert_audio_to_mono

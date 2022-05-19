@@ -269,12 +269,22 @@ Code example for performing `gfcc` and `mfcc` feature extraction can be found be
 ```
 from pyAudioProcessing.extract_features import get_features
 # Feature extraction
-features = get_features("data_samples/testing", ["gfcc", "mfcc"])
+features = get_features(
+  file_names={
+    "music": [<path to audio>, <path to audio>, ..],
+    "speech": [<path to audio>, <path to audio>, ..]
+  },
+  feature_names=["gfcc", "mfcc"]
+)
+
+# or if you have a dir with  sub-folders and audios
+# features = get_features(folder_path="data_samples/testing", feature_names=["gfcc", "mfcc"])
+
 # features is a dictionary that will hold data of the following format
 """
 {
-  subdir1_name: {file1_path: {"features": <list>, "feature_names": <list>}, ...},
-  subdir2_name: {file1_path: {"features": <list>, "feature_names": <list>}, ...},
+  music: {file1_path: {"features": <list>, "feature_names": <list>}, ...},
+  speech: {file1_path: {"features": <list>, "feature_names": <list>}, ...},
   ...
 }
 """

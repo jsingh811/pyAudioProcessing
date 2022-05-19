@@ -19,7 +19,7 @@ LEN = 13
 
 
 def triangular_filter_bank(
-    fs, nfft, lowfreq=133.33, linc=200 / 3, logsc=1.0711703, lin_filt=LEN, log_filt=27
+    fs, nfft, lowfreq=133.33, linc=200/3, logsc=1.0711703, lin_filt=LEN, log_filt=27
 ):
     """
     Triangular filterbank for MFCC computation
@@ -40,8 +40,7 @@ def triangular_filter_bank(
     nfreqs = np.arange(nfft) / (1.0 * nfft) * fs
 
     for i in range(num_filts):
-        low_freqs = freqs[i]
-        cent_freqs = freqs[i + 1]
+
         high_freqs = freqs[i + 2]
 
         lid = np.arange(
