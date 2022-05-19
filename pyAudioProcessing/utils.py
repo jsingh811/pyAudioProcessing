@@ -11,9 +11,12 @@ Created on Fri Mar 19 15:27:32 2021
 ################################################################################
 import json
 import os
+import warnings
 import numpy as np
 from scipy.io import wavfile
+warnings.filterwarnings("ignore")
 from pydub import AudioSegment
+
 
 ################################################################################
 # Globals
@@ -65,9 +68,9 @@ def read_audio(input_file):
             sampling_rate, signal = wavfile.read(input_file)
         else:
             try:
-                audio = AudioSegment.from_file(input_file)
+                audio = AudioSegment.from_file(input_file, extension)
                 sampling_rate = audio.frame_rate
-                if audio.sample_width == 2:                
+                if audio.sample_width == 2:
                     data = np.fromstring(audio._data, np.int16)
                 elif audio.sample_width == 4:
                     data = np.fromstring(audio._data, np.int32)

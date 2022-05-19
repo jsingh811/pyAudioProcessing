@@ -73,11 +73,11 @@ Bibtex
 
 ### Feature options  
 
-You can choose between features `mfcc`, `gfcc`, `spectral`, `chroma` or any combination of those, example `gfcc,mfcc,spectral,chroma`, to extract from your audio files for classification or just saving extracted feature for other uses.  
+You can choose between features `gfcc`, `mfcc`, `spectral`, `chroma` or any combination of those, example `gfcc,mfcc,spectral,chroma`, to extract from your audio files for classification or just saving extracted feature for other uses.  
 
 ### Classifier options   
 
-You can choose between `svm`, `svm_rbf`, `randomforest`, `logisticregression`, `knn`, `gradientboosting` and `extratrees`.   
+You can choose between `svm`, `svm_rbf`, `randomforest`, `logisticregression`, `knn`, `gradientboosting` and `extratrees`.    
 Hyperparameter tuning is included in the code for each using grid search.  
 
 
@@ -134,9 +134,24 @@ There are three models that have been pre-trained and provided in this project u
 
 `musicVSspeechVSbirds`: Contains SVM classifier that classifying audio into three possible classes - music, speech and birds. This classifier was trained using mfcc, spectral and chroma features.
 
-There are two ways to specify the data you want to classify.  
+There are three ways to specify the data you want to classify.  
 
-1. Using `file_names` specifying locations of audios as follows.
+1. Classifying a single audio file specified by input `file`.
+
+```
+from pyAudioProcessing.run_classification import classify_ms, classify_msb, classify_genre
+
+# musicVSspeech classification
+results_music_speech = classify_ms(file="/Users/xyz/Documents/audio.wav")
+
+# musicVSspeechVSbirds classification
+results_music_speech_birds = classify_msb(file="/Users/xyz/Documents/audio.wav")
+
+# music genre classification
+results_music_genre = classify_genre(file="/Users/xyz/Documents/audio.wav")
+```
+
+2. Using `file_names` specifying locations of audios as follows.
 
 ```
 # {"audios_1" : [<path to audio>, <path to audio>, ...], "audios_2": [<path to audio>, ...],}
@@ -168,7 +183,7 @@ results_music_speech_birds = classify_msb(file_names=file_names)
 results_music_genre = classify_genre(file_names=file_names)
 ```
 
-2. Using data structured as specified in [structuring guidelines](https://github.com/jsingh811/pyAudioProcessing#training-and-testing-data-structuring) and passing the parent folder path as `folder_path` input.  
+3. Using data structured as specified in [structuring guidelines](https://github.com/jsingh811/pyAudioProcessing#training-and-testing-data-structuring) and passing the parent folder path as `folder_path` input.  
 
 The following commands in Python can be used to classify your data.
 
@@ -199,7 +214,14 @@ Sample spoken location name dataset for spoken instances of "london" and "boston
 
 ### Examples  
 
-Code example of using `gfcc,spectral,chroma` feature and `svm` classifier. Sample data can be found [here](https://github.com/jsingh811/pyAudioProcessing/tree/master/data_samples). Please refer to the section on [Training and Testing Data structuring](https://github.com/jsingh811/pyAudioProcessing#training-and-testing-data-structuring) to use your own data instead.   
+Code example of using `gfcc,spectral,chroma` feature and `svm` classifier. Sample data can be found [here](https://github.com/jsingh811/pyAudioProcessing/tree/master/data_samples). 
+
+There are 2 ways to pass the training data in. 
+
+1. Using locations of files in a dictionary format as the input `file_names`.  
+
+2. Passing in a 	`folder_path` containing sub-folders and audio. Please refer to the section on [Training and Testing Data structuring](https://github.com/jsingh811/pyAudioProcessing#training-and-testing-data-structuring) to use your own data instead.   
+
 ```
 from pyAudioProcessing.run_classification import  classify, train
 
@@ -209,8 +231,8 @@ train(
 		"music": [<path to audio>, <path to audio>, ..],
 		"speech": [<path to audio>, <path to audio>, ..]
 	},
-	feature_names=["mfcc", "gfcc", "spectral", "chroma"],
-	classifier="knn",
+	feature_names=["gfcc", "spectral", "chroma"],
+	classifier="svm",
 	classifier_name="svm_test_clf"
 )
 
@@ -219,7 +241,7 @@ Or, to use a directory containing audios organized as in [structuring guidelines
 ```
 train(
 	folder_path="../data", # path to dir
-	feature_names=["mfcc", "gfcc", "spectral", "chroma"],
+	feature_names=["gfcc", "spectral", "chroma"],
 	classifier="svm",
 	classifier_name="svm_test_clf"
 )
@@ -229,7 +251,16 @@ The above logs files analyzed, hyperparameter tuning results for recall, precisi
 
 To classify audio samples with the classifier you created above,
 ```
-# Classify data
+# Classify a single file 
+
+results = classify(
+	file = "<path to audio>",
+	feature_names=["gfcc", "spectral", "chroma"],
+	classifier="svm",
+	classifier_name="svm_test_clf"
+)
+
+# Classify multiple files with known labels and locations
 results = classify(
 	file_names={
 		"music": [<path to audio>, <path to audio>, ..],
@@ -268,7 +299,16 @@ Code example for performing `gfcc` and `mfcc` feature extraction can be found be
 
 ```
 from pyAudioProcessing.extract_features import get_features
-# Feature extraction
+
+# Feature extraction of a single file
+
+features = get_features(
+  file="<path to audio>",
+  feature_names=["gfcc", "mfcc"]
+)
+
+# Feature extraction of a multiple files
+
 features = get_features(
   file_names={
     "music": [<path to audio>, <path to audio>, ..],

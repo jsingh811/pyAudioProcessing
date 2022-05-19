@@ -179,9 +179,9 @@ def classify_pretrained(classifier_name, folder_path=None, file_names={}, file=N
             speechVSmusic
             speechVSmusicVSbirds
             music genre
-    
+
     Pass in either a path to the folder containing audio files in sub-folders
-    as specified in the directory structure document in the README; 
+    as specified in the directory structure document in the README;
     or pass in a dictionary `file_names` specifying audio paths as specified below;
     or a single file name specified by input `file`.
     in a list as values.
@@ -217,7 +217,7 @@ def classify_pretrained(classifier_name, folder_path=None, file_names={}, file=N
            \nCan't use two definitions of data paths.
            Using file over file_names."""
        )
-       
+
     use_file_names = False
     if folder_path:
         # Get all directories under folder_path
@@ -258,7 +258,7 @@ def classify_pretrained(classifier_name, folder_path=None, file_names={}, file=N
 def classify_ms(folder_path=None, file_names=None, file=None):
     """
     Pass in either a path to the folder containing audio files in sub-folders
-    as specified in the directory structure document in the README; 
+    as specified in the directory structure document in the README;
     or pass in a dictionary `file_names` specifying audio paths as specified below;
     or a single file name specified by input `file`.
     in a list as values.
@@ -283,7 +283,7 @@ def classify_ms(folder_path=None, file_names=None, file=None):
 def classify_msb(folder_path=None, file_names=None, file=None):
     """
     Pass in either a path to the folder containing audio files in sub-folders
-    as specified in the directory structure document in the README; 
+    as specified in the directory structure document in the README;
     or pass in a dictionary `file_names` specifying audio paths as specified below;
     or a single file name specified by input `file`.
     in a list as values.
@@ -308,7 +308,7 @@ def classify_msb(folder_path=None, file_names=None, file=None):
 def classify_genre(folder_path=None, file_names=None, file=None):
     """
     Pass in either a path to the folder containing audio files in sub-folders
-    as specified in the directory structure document in the README; 
+    as specified in the directory structure document in the README;
     or pass in a dictionary `file_names` specifying audio paths as specified below;
     or a single file name specified by input `file`.
     in a list as values.
@@ -352,7 +352,7 @@ def train(
             "speech": ["/Users/xyz/Downloads/speech1.wav", ...],
             ...
         }
-        
+
         classifier
             Classifier. Choose from svm, svm_rbf, randomforest, logisticregression,
             knn, gradientboosting, extratrees.
@@ -360,7 +360,7 @@ def train(
             Path to the saved classifier model.
         feature_names
             defaults to ["mfcc"]. Choose from "mfcc", "gfcc", "spectral", "chroma".
-            
+
     The model is saved in the specified classifier_name path .
     """
     if folder_path:
@@ -413,7 +413,7 @@ def classify(
         },
         OR
         file = "/Users/xyz/Documents/audio.wav"
-        
+
         classifier
             Classifier. Choose from svm, svm_rbf, randomforest, logisticregression,
             knn, gradientboosting, extratrees.
@@ -425,7 +425,7 @@ def classify(
             Must be same features selected during training the classifier
         logfile
             If you want to log the classification results in a file json
-    
+
     Returns
         Classification results as a dictionary of the form
         {
