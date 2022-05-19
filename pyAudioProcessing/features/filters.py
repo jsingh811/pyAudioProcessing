@@ -19,7 +19,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
 import numpy as np
-import scipy as sp
 from scipy import signal as sgn
 
 DEFAULT_FILTER_NUM = 100
@@ -41,31 +40,24 @@ def erb_point(low_freq, high_freq, fraction):
     # Change the following three parameters if you wish to use a different ERB
     # scale. Must change in MakeERBCoeffs too.
     # TODO: Factor these parameters out
-    ear_q = 9.26449 # Glasberg and Moore Parameters
+    ear_q = 9.26449  # Glasberg and Moore Parameters
     min_bw = 24.7
     order = 1
 
     # All of the following expressions are derived in Apple TR #35, "An
     # Efficient Implementation of the Patterson-Holdsworth Cochlear Filter
     # Bank." See pages 33-34.
-    erb_point = (
-        -ear_q * min_bw
-        + np.exp(
-            fraction * (
-                -np.log(high_freq + ear_q * min_bw)
-                + np.log(low_freq + ear_q * min_bw)
-                )
-        ) *
-        (high_freq + ear_q * min_bw)
-    )
+    erb_point = -ear_q * min_bw + np.exp(
+        fraction
+        * (-np.log(high_freq + ear_q * min_bw) + np.log(low_freq + ear_q * min_bw))
+    ) * (high_freq + ear_q * min_bw)
 
     return erb_point
 
 
 def erb_space(
-    low_freq=DEFAULT_LOW_FREQ,
-    high_freq=DEFAULT_HIGH_FREQ,
-    num=DEFAULT_FILTER_NUM):
+    low_freq=DEFAULT_LOW_FREQ, high_freq=DEFAULT_HIGH_FREQ, num=DEFAULT_FILTER_NUM
+):
     """
     This function computes an array of ``num`` frequencies uniformly spaced
     between ``high_freq`` and ``low_freq`` on an ERB scale.
@@ -74,11 +66,7 @@ def erb_space(
     "Suggested formulae for calculating auditory-filter bandwidths and
     excitation patterns," J. Acoust. Soc. Am. 74, 750-753.
     """
-    return erb_point(
-        low_freq,
-        high_freq,
-        np.arange(1, num + 1) / num
-        )
+    return erb_point(low_freq, high_freq, np.arange(1, num + 1) / num)
 
 
 def centre_freqs(fs, num_freqs, cutoff):
@@ -145,11 +133,11 @@ def make_erb_filters(fs, centre_freqs, width=1.0):
     # Change the followFreqing three parameters if you wish to use a different
     # ERB scale. Must change in ERBSpace too.
     # TODO: factor these out
-    ear_q = 9.26449 # Glasberg and Moore Parameters
+    ear_q = 9.26449  # Glasberg and Moore Parameters
     min_bw = 24.7
     order = 1
 
-    erb = width*((centre_freqs / ear_q) ** order + min_bw ** order) ** ( 1 /order)
+    erb = width * ((centre_freqs / ear_q) ** order + min_bw ** order) ** (1 / order)
     B = 1.019 * 2 * np.pi * erb
 
     arg = 2 * centre_freqs * np.pi * T
@@ -182,22 +170,19 @@ def make_erb_filters(fs, centre_freqs, width=1.0):
     gain_arg = np.exp(1j * arg - B * T)
 
     gain = np.abs(
-            (vec - gain_arg * k11)
-          * (vec - gain_arg * k12)
-          * (vec - gain_arg * k13)
-          * (vec - gain_arg * k14)
-          * (  T * np.exp(B * T)
-             / (-1 / np.exp(B * T) + 1 + vec * (1 - np.exp(B * T)))
-            )**4
-        )
+        (vec - gain_arg * k11)
+        * (vec - gain_arg * k12)
+        * (vec - gain_arg * k13)
+        * (vec - gain_arg * k14)
+        * (T * np.exp(B * T) / (-1 / np.exp(B * T) + 1 + vec * (1 - np.exp(B * T))))
+        ** 4
+    )
 
     allfilts = np.ones_like(centre_freqs)
 
-    fcoefs = np.column_stack([
-        A0 * allfilts, A11, A12, A13, A14, A2*allfilts,
-        B0 * allfilts, B1, B2,
-        gain
-    ])
+    fcoefs = np.column_stack(
+        [A0 * allfilts, A11, A12, A13, A14, A2 * allfilts, B0 * allfilts, B1, B2, gain]
+    )
 
     return fcoefs
 
@@ -220,7 +205,7 @@ def erb_filterbank(wave, coefs):
     |
     | (c) 2013 Jason Heeris (Python implementation)
     """
-    output = np.zeros((coefs[:,9].shape[0], wave.shape[0]))
+    output = np.zeros((coefs[:, 9].shape[0], wave.shape[0]))
 
     gain = coefs[:, 9]
     # A0, A11, A2

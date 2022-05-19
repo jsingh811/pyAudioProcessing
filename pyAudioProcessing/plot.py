@@ -6,8 +6,7 @@ Created on Mon Jul 19 18:22:15 2021
 @author: jsingh
 """
 # Imports
-import os
-import sys
+
 import numpy
 import matplotlib.pyplot as plot
 from pyAudioProcessing.utils import read_audio

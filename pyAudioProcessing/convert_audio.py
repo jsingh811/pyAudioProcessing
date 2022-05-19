@@ -15,15 +15,14 @@ from pydub import AudioSegment
 
 # Functions
 
+
 def convert_from_m4a(file_path):
     """
     Converts m4a audio into wav format.
     """
     try:
         track = AudioSegment.from_file(file_path, "m4a")
-        file_handle = track.export(
-            file_path.replace(".m4a", ".wav"), format='wav'
-        )
+        file_handle = track.export(file_path.replace(".m4a", ".wav"), format="wav")
     except FileNotFoundError:
         print("{} does not appear to be valid. Please check.")
     except Exception as e:
@@ -36,9 +35,7 @@ def convert_from_mp3(file_path):
     """
     try:
         track = AudioSegment.from_file(file_path, "mp3")
-        file_handle = track.export(
-            file_path.replace(".mp3", ".wav"), format='wav'
-        )
+        file_handle = track.export(file_path.replace(".mp3", ".wav"), format="wav")
     except FileNotFoundError:
         print("{} does not appear to be valid. Please check.")
     except Exception as e:
@@ -51,9 +48,7 @@ def convert_from_mp4(file_path):
     """
     try:
         track = AudioSegment.from_file(file_path, "mp4")
-        file_handle = track.export(
-            file_path.replace(".mp4", ".wav"), format='wav'
-        )
+        file_handle = track.export(file_path.replace(".mp4", ".wav"), format="wav")
     except FileNotFoundError:
         print("{} does not appear to be valid. Please check.")
     except Exception as e:
@@ -66,9 +61,7 @@ def convert_from_aac(file_path):
     """
     try:
         track = AudioSegment.from_file(file_path, "aac")
-        file_handle = track.export(
-            file_path.replace(".aac", ".wav"), format='wav'
-        )
+        file_handle = track.export(file_path.replace(".aac", ".wav"), format="wav")
     except FileNotFoundError:
         print("{} does not appear to be valid. Please check.")
     except Exception as e:
@@ -133,5 +126,3 @@ def convert_files_to_wav(dir_path, audio_format="m4a"):
                 audio_format
             )
         )
-    
-    
