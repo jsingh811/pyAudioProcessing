@@ -233,19 +233,19 @@ def classify_pretrained(classifier_name, folder_path=None, file_names={}, file=N
     if classifier_name == "speechVSmusic":
         feature_names = ["spectral", "chroma", "mfcc"]
         classifier_name = join(
-            dirname(abspath(dirname(__file__))), "models/speechVSmusic/svm_clf"
+            abspath(dirname(__file__)), "models/speechVSmusic/svm_clf"
         )
         classifier = "svm"
     elif classifier_name == "music genre":
         feature_names = ["gfcc", "spectral", "chroma", "mfcc"]
         classifier_name = join(
-            dirname(abspath(dirname(__file__))), "models/music genre/svm_clf"
+            abspath(dirname(__file__)), "models/music genre/svm_clf"
         )
         classifier = "svm"
     elif classifier_name == "speechVSmusicVSbirds":
         feature_names = ["spectral", "chroma", "mfcc"]
         classifier_name = join(
-            dirname(abspath(dirname(__file__))), "models/speechVSmusicVSbirds/svm_clf"
+            abspath(dirname(__file__)), "models/speechVSmusicVSbirds/svm_clf"
         )
         classifier = "svm"
     else:
