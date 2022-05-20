@@ -3,7 +3,7 @@
 ![pyaudioprocessing](https://user-images.githubusercontent.com/16875926/131924198-e34abe7e-12d8-41f9-926d-db199734dcaa.png)
 
 A Python based library for processing audio data into features (GFCC, MFCC, spectral, chroma) and building Machine Learning models.  
-This was written using `Python 3.7.6`, and has been tested to work with Python >= 3.6, <4.  
+This was initially written using `Python 3.7`, and updated several times using `Python 3.8` and `Python 3.9`, and has been tested to work with Python >= 3.6, <3.10.  
 
 ## Getting Started  
 
@@ -126,13 +126,13 @@ If you want to classify audio samples without any known labels, structure the da
 
 ## Classifying with Pre-trained Models
 
-There are three models that have been pre-trained and provided in this project under the /models directory. They are as follows.
+There are three models that have been pre-trained and provided in this project. They are as follows.
 
-`music genre`: Contains SVM classifier to classify audio into 10 music genres - blues, classical, country, disco, hiphop, jazz, metal, pop, reggae, rock. This classifier was trained using mfcc, gfcc, spectral and chroma features. In order to classify your audio files using this classifier, please follow the audio files structuring guidelines. The following commands in Python can be used to classify your data.
+`music genre`: Contains pre-trained SVM classifier to classify audio into 10 music genres - blues, classical, country, disco, hiphop, jazz, metal, pop, reggae, rock. This classifier was trained using MFCC, GFCC, spectral, and chroma features.
 
-`musicVSspeech`: Contains SVM classifier that classifying audio into two possible classes - music and speech. This classifier was trained using mfcc, spectral and chroma features.
+`musicVSspeech`: Contains pre-trained SVM classifier that classifying audio into two possible classes - music and speech. This classifier was trained using MFCC, spectral, and chroma features.
 
-`musicVSspeechVSbirds`: Contains SVM classifier that classifying audio into three possible classes - music, speech and birds. This classifier was trained using mfcc, spectral and chroma features.
+`musicVSspeechVSbirds`: Contains pre-trained SVM classifier that classifying audio into three possible classes - music, speech and birds. This classifier was trained using GFCC, spectral, and chroma features.
 
 There are three ways to specify the data you want to classify.  
 
@@ -214,7 +214,7 @@ Sample spoken location name dataset for spoken instances of "london" and "boston
 
 ### Examples  
 
-Code example of using `gfcc,spectral,chroma` feature and `svm` classifier. Sample data can be found [here](https://github.com/jsingh811/pyAudioProcessing/tree/master/data_samples). 
+Code example of using `gfcc,spectral,chroma` feature and `svm` classifier.
 
 There are 2 ways to pass the training data in. 
 
@@ -295,7 +295,7 @@ This feature lets the user extract aggregated data features calculated per audio
 
 ### Examples  
 
-Code example for performing `gfcc` and `mfcc` feature extraction can be found below. To use your own audio data for feature extraction, pass the path to `get_features` in place of `data_samples/testing`. Please refer to the format of directory `data_samples/testing` or the section on [Training and Testing Data structuring](https://github.com/jsingh811/pyAudioProcessing#training-and-testing-data-structuring).  
+Code example for performing `gfcc` and `mfcc` feature extraction can be found below. 
 
 ```
 from pyAudioProcessing.extract_features import get_features
