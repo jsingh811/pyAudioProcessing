@@ -29,6 +29,8 @@ setup(
    long_description_content_type="text/markdown",
    author='Jyotika Singh',
    packages=find_packages(where=PROJECT),
+   package_data={'': ['svm_clf', 'svm_clf.arff', 'svm_clfMEANS']},
+   include_package_data=True,
    url="https://github.com/jsingh811/pyAudioProcessing",
    install_requires=get_requirements(),
    python_requires='>=3.6, <4',
