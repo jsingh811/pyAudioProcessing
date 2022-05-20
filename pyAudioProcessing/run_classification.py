@@ -11,7 +11,7 @@ Created on Thu Jul 13 13:08:51 2019
 ###############################################################################
 
 from os import listdir, walk
-from os.path import isfile, join
+from os.path import isfile, join, abspath, dirname
 
 from pyAudioProcessing.utils import write_to_json, ST_WIN, ST_STEP
 from pyAudioProcessing.trainer import audioTrainTest as aT
@@ -232,15 +232,21 @@ def classify_pretrained(classifier_name, folder_path=None, file_names={}, file=N
 
     if classifier_name == "speechVSmusic":
         feature_names = ["spectral", "chroma", "mfcc"]
-        classifier_name = "models/speechVSmusic/svm_clf"
+        classifier_name = join(
+            dirname(abspath(dirname(__file__))), "models/speechVSmusic/svm_clf"
+        )
         classifier = "svm"
     elif classifier_name == "music genre":
         feature_names = ["gfcc", "spectral", "chroma", "mfcc"]
-        classifier_name = "models/music genre/svm_clf"
+        classifier_name = join(
+            dirname(abspath(dirname(__file__))), "models/music genre/svm_clf"
+        )
         classifier = "svm"
     elif classifier_name == "speechVSmusicVSbirds":
         feature_names = ["spectral", "chroma", "mfcc"]
-        classifier_name = "models/speechVSmusicVSbirds/svm_clf"
+        classifier_name = join(
+            dirname(abspath(dirname(__file__))), "models/speechVSmusicVSbirds/svm_clf"
+        )
         classifier = "svm"
     else:
         raise ("Classifier does not exist")
