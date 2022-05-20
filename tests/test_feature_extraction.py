@@ -10,6 +10,8 @@ import pytest
 from pathlib import Path
 from pyAudioProcessing.extract_features import get_features
 
+# TODO: add tests for specctral, temporal, and chroma, classify, pretrained, train
+
 def test_get_features():
     """
     Test get_features function
@@ -25,3 +27,7 @@ def test_get_features():
     assert "feature_names" in features["speech"][key]
     assert  "mfcc_1_mean" in features["speech"][key]["feature_names"]
     assert  "gfcc_1_mean" in features["speech"][key]["feature_names"]
+    inx = features["speech"][key]["feature_names"].index("gfcc_4_mean")
+    assert round(features["speech"][key]["features"][inx], 3) == -0.056
+    inx = features["speech"][key]["feature_names"].index("gfcc_5_std")
+    assert round(features["speech"][key]["features"][inx], 2) == 0.09
