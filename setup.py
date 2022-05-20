@@ -23,7 +23,7 @@ def get_requirements(path=REQUIREMENTS_PATH):
 
 setup(
    name='pyAudioProcessing',
-   version='1.1.11',
+   version='1.1.12',
    description='Audio processing-feature extraction and building machine learning models from audio data.',
    long_description=long_description,
    long_description_content_type="text/markdown",
