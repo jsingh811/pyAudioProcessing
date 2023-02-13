@@ -46,6 +46,23 @@ Please refer to the [Wiki](https://github.com/jsingh811/pyAudioProcessing/wiki) 
 
 Using pyAudioProcessing in your research? Please cite as follows.
 
+```
+Singh, J. (2022). pyAudioProcessing: Audio Processing, Feature Extraction, and Machine Learning Modeling. In Proceedings of the Python in Science Conference. Python in Science Conference. SciPy. https://doi.org/10.25080/majora-212e5952-017
+```
+
+Bibtex
+```
+@InProceedings{ jyotika_singh-proc-scipy-2022,
+  author    = { {J}yotika {S}ingh },
+  title     = { py{A}udio{P}rocessing: {A}udio {P}rocessing, {F}eature {E}xtraction, and {M}achine {L}earning {M}odeling },
+  booktitle = { {P}roceedings of the 21st {P}ython in {S}cience {C}onference },
+  pages     = { 152 - 158 },
+  year      = { 2022 },
+  doi       = { 10.25080/majora-212e5952-017 }
+}
+```
+
+To cite the software version
 
 ```
 Jyotika Singh. (2021, July 22). jsingh811/pyAudioProcessing: Audio processing, feature extraction and classification (Version v1.2.0). Zenodo. http://doi.org/10.5281/zenodo.5121041
